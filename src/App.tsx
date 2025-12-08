@@ -4,9 +4,45 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import LandlordDashboard from "./pages/LandlordDashboard";
-import TenantDashboard from "./pages/TenantDashboard";
 import NotFound from "./pages/NotFound";
+
+// Auth Pages
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+
+// Landlord Pages
+import LandlordDashboard from "./pages/landlord/Dashboard";
+import PropertyManagement from "./pages/landlord/PropertyManagement";
+import UnitManagement from "./pages/landlord/UnitManagement";
+import RentCollection from "./pages/landlord/RentCollection";
+import LandlordMaintenance from "./pages/landlord/Maintenance";
+import TenancyAgreements from "./pages/landlord/TenancyAgreements";
+import LandlordReports from "./pages/landlord/Reports";
+import Subscription from "./pages/landlord/Subscription";
+import AutomatedReminders from "./pages/landlord/AutomatedReminders";
+
+// Tenant Pages
+import TenantDashboard from "./pages/tenant/Dashboard";
+import PropertySearch from "./pages/tenant/PropertySearch";
+import RentPayment from "./pages/tenant/RentPayment";
+import TenantMaintenance from "./pages/tenant/Maintenance";
+import TenantAgreements from "./pages/tenant/Agreements";
+import TenantProfile from "./pages/tenant/Profile";
+
+// Admin Pages
+import AdminDashboard from "./pages/admin/Dashboard";
+import UserManagement from "./pages/admin/UserManagement";
+import PlatformAnalytics from "./pages/admin/PlatformAnalytics";
+import SupportTickets from "./pages/admin/SupportTickets";
+import SubscriptionManagement from "./pages/admin/SubscriptionManagement";
+
+// Shared Pages
+import Settings from "./pages/shared/Settings";
+import Documents from "./pages/shared/Documents";
+import PaymentHistory from "./pages/shared/PaymentHistory";
+import Help from "./pages/shared/Help";
+import Notifications from "./pages/shared/Notifications";
 
 const queryClient = new QueryClient();
 
@@ -17,10 +53,52 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Index />} />
+          
+          {/* Auth Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          
+          {/* Landlord Routes */}
+          <Route path="/landlord/dashboard" element={<LandlordDashboard />} />
+          <Route path="/landlord/properties" element={<PropertyManagement />} />
+          <Route path="/landlord/units" element={<UnitManagement />} />
+          <Route path="/landlord/rent-collection" element={<RentCollection />} />
+          <Route path="/landlord/maintenance" element={<LandlordMaintenance />} />
+          <Route path="/landlord/agreements" element={<TenancyAgreements />} />
+          <Route path="/landlord/reports" element={<LandlordReports />} />
+          <Route path="/landlord/subscription" element={<Subscription />} />
+          <Route path="/landlord/reminders" element={<AutomatedReminders />} />
+          
+          {/* Tenant Routes */}
+          <Route path="/tenant/dashboard" element={<TenantDashboard />} />
+          <Route path="/tenant/search" element={<PropertySearch />} />
+          <Route path="/tenant/rent" element={<RentPayment />} />
+          <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
+          <Route path="/tenant/agreements" element={<TenantAgreements />} />
+          <Route path="/tenant/profile" element={<TenantProfile />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<UserManagement />} />
+          <Route path="/admin/analytics" element={<PlatformAnalytics />} />
+          <Route path="/admin/support" element={<SupportTickets />} />
+          <Route path="/admin/subscriptions" element={<SubscriptionManagement />} />
+          
+          {/* Shared Routes */}
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/documents" element={<Documents />} />
+          <Route path="/payments" element={<PaymentHistory />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/notifications" element={<Notifications />} />
+          
+          {/* Legacy Routes (for backward compatibility) */}
           <Route path="/dashboard" element={<LandlordDashboard />} />
           <Route path="/tenant" element={<TenantDashboard />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          
+          {/* 404 - Keep this last */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
