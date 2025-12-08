@@ -1,6 +1,8 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Calendar, Sparkles, Bug, Zap } from "lucide-react";
 
 const Changelog = () => {
@@ -171,14 +173,14 @@ const Changelog = () => {
               Subscribe to our newsletter to get notified about new features and updates
             </p>
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input 
+              <Input 
                 type="email" 
                 placeholder="Enter your email" 
-                className="flex-1 px-4 py-3 border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+                className="flex-1"
               />
-              <button className="px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap">
+              <Button className="whitespace-nowrap">
                 Subscribe
-              </button>
+              </Button>
             </div>
           </div>
         </div>

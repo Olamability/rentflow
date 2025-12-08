@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const Contact = () => {
   const contactMethods = [
@@ -126,11 +127,11 @@ const Contact = () => {
 
                 <div>
                   <Label htmlFor="message">Message</Label>
-                  <textarea 
+                  <Textarea 
                     id="message" 
                     rows={6}
                     placeholder="Tell us more about your inquiry..."
-                    className="mt-2 w-full px-3 py-2 border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="mt-2"
                   />
                 </div>
 
