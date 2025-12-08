@@ -44,6 +44,19 @@ import PaymentHistory from "./pages/shared/PaymentHistory";
 import Help from "./pages/shared/Help";
 import Notifications from "./pages/shared/Notifications";
 
+// Public Pages
+import Features from "./pages/Features";
+import Pricing from "./pages/Pricing";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Blog from "./pages/Blog";
+import Careers from "./pages/Careers";
+import Integrations from "./pages/Integrations";
+import Changelog from "./pages/Changelog";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Security from "./pages/Security";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -55,6 +68,17 @@ const App = () => (
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Index />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/integrations" element={<Integrations />} />
+          <Route path="/changelog" element={<Changelog />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/security" element={<Security />} />
           
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
