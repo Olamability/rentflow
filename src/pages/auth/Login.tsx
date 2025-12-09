@@ -1,30 +1,45 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Building2, Mail, Lock, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/contexts/AuthContext";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginFormData } from "@/lib/validations";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
   const [userType, setUserType] = useState<'tenant' | 'landlord' | 'admin'>('tenant');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      role: userType,
+    },
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
     setError('');
     setLoading(true);
 
-    // Mock login - in production, this would call an API
-    setTimeout(() => {
-      if (email && password) {
+    try {
+      await login(data.email, data.password, data.role);
+      
+      // Redirect to the page they tried to visit or default dashboard
+      const from = (location.state as any)?.from?.pathname;
+      if (from) {
+        navigate(from);
+      } else {
         // Redirect based on user type
-        switch (userType) {
+        switch (data.role) {
           case 'landlord':
             navigate('/landlord/dashboard');
             break;
@@ -35,11 +50,12 @@ const Login = () => {
             navigate('/admin/dashboard');
             break;
         }
-      } else {
-        setError('Please enter both email and password');
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Invalid credentials');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -73,7 +89,9 @@ const Login = () => {
             </TabsList>
           </Tabs>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <input type="hidden" {...register('role')} value={userType} />
+            
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -83,11 +101,12 @@ const Login = () => {
                   type="email"
                   placeholder="you@example.com"
                   className="pl-10"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  {...register('email')}
                 />
               </div>
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -99,11 +118,12 @@ const Login = () => {
                   type="password"
                   placeholder="••••••••"
                   className="pl-10"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register('password')}
                 />
               </div>
+              {errors.password && (
+                <p className="text-sm text-destructive">{errors.password.message}</p>
+              )}
             </div>
 
             <div className="flex items-center justify-between">
