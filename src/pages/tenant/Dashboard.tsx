@@ -1,11 +1,12 @@
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
-  Building2, 
   Home, 
   CreditCard, 
   Wrench, 
   FileText, 
   Settings, 
-  Bell,
+  Search,
+  User,
   MessageSquare,
   Calendar,
   Download,
@@ -17,13 +18,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-const sidebarLinks = [
-  { icon: Home, label: "Dashboard", href: "/tenant", active: true },
-  { icon: CreditCard, label: "Payments", href: "/tenant/rent" },
+const navLinks = [
+  { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
+  { icon: Search, label: "Search Properties", href: "/tenant/search" },
+  { icon: CreditCard, label: "Rent Payment", href: "/tenant/rent" },
   { icon: Wrench, label: "Maintenance", href: "/tenant/maintenance" },
-  { icon: FileText, label: "Documents", href: "/tenant/documents" },
-  { icon: MessageSquare, label: "Messages", href: "/tenant/messages" },
-  { icon: Settings, label: "Settings", href: "/tenant/settings" },
+  { icon: FileText, label: "Agreements", href: "/tenant/agreements" },
+  { icon: User, label: "Profile", href: "/tenant/profile" },
+  { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
 const paymentHistory = [
@@ -46,59 +48,12 @@ const documents = [
 
 const TenantDashboard = () => {
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-sidebar text-sidebar-foreground flex-shrink-0">
-        <div className="p-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-sidebar-primary flex items-center justify-center">
-              <Building2 className="w-6 h-6 text-sidebar-primary-foreground" />
-            </div>
-            <span className="text-xl font-semibold">RentFlow</span>
-          </Link>
-
-          {/* Navigation */}
-          <nav className="space-y-1">
-            {sidebarLinks.map((link) => (
-              <Link
-                key={link.label}
-                to={link.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                  link.active 
-                    ? 'bg-sidebar-accent text-sidebar-accent-foreground' 
-                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
-                }`}
-              >
-                <link.icon className="w-5 h-5 flex-shrink-0" />
-                <span>{link.label}</span>
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top bar */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Tenant Portal</h1>
-            <p className="text-sm text-muted-foreground">Welcome back, Sarah</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
-            </button>
-            <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-              <span className="text-sm font-semibold text-accent-foreground">SJ</span>
-            </div>
-          </div>
-        </header>
-
-        {/* Dashboard content */}
-        <main className="flex-1 p-6 overflow-auto">
+    <DashboardLayout
+      navLinks={navLinks}
+      userName="Sarah Johnson"
+      pageTitle="Tenant Portal"
+      pageDescription="Welcome back, Sarah"
+    >
           {/* Lease Overview Card */}
           <div className="bg-card rounded-xl border border-border p-6 mb-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -122,8 +77,8 @@ const TenantDashboard = () => {
               <div className="text-right">
                 <div className="text-3xl font-bold text-foreground">$1,500</div>
                 <div className="text-muted-foreground">/month</div>
-                <Button variant="accent" className="mt-3">
-                  Pay Rent
+                <Button variant="accent" className="mt-3" asChild>
+                  <Link to="/tenant/rent">Pay Rent</Link>
                 </Button>
               </div>
             </div>
@@ -166,9 +121,11 @@ const TenantDashboard = () => {
               <div className="bg-card rounded-xl border border-border">
                 <div className="p-6 border-b border-border flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-foreground">Maintenance</h2>
-                  <Button variant="outline" size="sm">
-                    <Plus className="w-4 h-4 mr-1" />
-                    New Request
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/tenant/maintenance">
+                      <Plus className="w-4 h-4 mr-1" />
+                      New Request
+                    </Link>
                   </Button>
                 </div>
                 <div className="p-4">
@@ -228,14 +185,12 @@ const TenantDashboard = () => {
             <div>
               <div className="font-medium text-foreground">Rent Due in 7 Days</div>
               <p className="text-sm text-muted-foreground">Your December rent payment of $1,500 is due on December 15th. Set up autopay to never miss a payment.</p>
-              <Button variant="outline" size="sm" className="mt-3">
-                Set Up Autopay
+              <Button variant="outline" size="sm" className="mt-3" asChild>
+                <Link to="/tenant/rent">Set Up Autopay</Link>
               </Button>
             </div>
           </div>
-        </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Building2, 
   Home, 
@@ -7,7 +7,6 @@ import {
   Wrench, 
   FileText, 
   Settings, 
-  Bell,
   Plus,
   TrendingUp,
   TrendingDown,
@@ -19,13 +18,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-const sidebarLinks = [
-  { icon: Home, label: "Dashboard", href: "/dashboard", active: true },
-  { icon: Building2, label: "Properties", href: "/properties" },
-  { icon: Users, label: "Tenants", href: "/tenants" },
-  { icon: CreditCard, label: "Payments", href: "/payments" },
-  { icon: Wrench, label: "Maintenance", href: "/maintenance" },
-  { icon: FileText, label: "Documents", href: "/documents" },
+const navLinks = [
+  { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
+  { icon: Building2, label: "Properties", href: "/landlord/properties" },
+  { icon: Users, label: "Units", href: "/landlord/units" },
+  { icon: CreditCard, label: "Rent Collection", href: "/landlord/rent-collection" },
+  { icon: Wrench, label: "Maintenance", href: "/landlord/maintenance" },
+  { icon: FileText, label: "Agreements", href: "/landlord/agreements" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
@@ -50,63 +49,19 @@ const properties = [
 ];
 
 const LandlordDashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-sidebar text-sidebar-foreground flex-shrink-0 transition-all duration-300`}>
-        <div className="p-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-sidebar-primary flex items-center justify-center">
-              <Building2 className="w-6 h-6 text-sidebar-primary-foreground" />
-            </div>
-            {sidebarOpen && <span className="text-xl font-semibold">RentFlow</span>}
-          </Link>
-
-          {/* Navigation */}
-          <nav className="space-y-1">
-            {sidebarLinks.map((link) => (
-              <Link
-                key={link.label}
-                to={link.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                  link.active 
-                    ? 'bg-sidebar-accent text-sidebar-accent-foreground' 
-                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
-                }`}
-              >
-                <link.icon className="w-5 h-5 flex-shrink-0" />
-                {sidebarOpen && <span>{link.label}</span>}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top bar */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Dashboard</h1>
-            <p className="text-sm text-muted-foreground">Welcome back, James</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
-            </button>
-            <Button variant="accent" size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Property
-            </Button>
-          </div>
-        </header>
-
-        {/* Dashboard content */}
-        <main className="flex-1 p-6 overflow-auto">
+    <DashboardLayout
+      navLinks={navLinks}
+      userName="James Wilson"
+      pageTitle="Dashboard"
+      pageDescription="Welcome back, James"
+      headerActions={
+        <Button variant="accent" size="sm">
+          <Plus className="w-4 h-4 mr-2" />
+          Add Property
+        </Button>
+      }
+    >
           {/* Stats grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {stats.map((stat) => (
@@ -235,9 +190,7 @@ const LandlordDashboard = () => {
               </div>
             </div>
           </div>
-        </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 };
 
