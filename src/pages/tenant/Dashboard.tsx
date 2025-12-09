@@ -190,7 +190,6 @@ const TenantDashboard = () => {
               </Button>
             </div>
           </div>
-        </div>
     </DashboardLayout>
   );
 };
