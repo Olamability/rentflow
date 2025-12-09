@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 
 const sidebarLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant", active: true },
-  { icon: CreditCard, label: "Payments", href: "/tenant/payments" },
+  { icon: CreditCard, label: "Payments", href: "/tenant/rent" },
   { icon: Wrench, label: "Maintenance", href: "/tenant/maintenance" },
   { icon: FileText, label: "Documents", href: "/tenant/documents" },
   { icon: MessageSquare, label: "Messages", href: "/tenant/messages" },
