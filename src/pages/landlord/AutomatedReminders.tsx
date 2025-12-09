@@ -19,6 +19,14 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
+interface Reminder {
+  id: string;
+  type: string;
+  schedule: string;
+  channels: string[];
+  active: boolean;
+}
+
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
   { icon: Building2, label: "Properties", href: "/landlord/properties" },
@@ -35,9 +43,9 @@ const navLinks = [
 const AutomatedReminders = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedReminder, setSelectedReminder] = useState<any>(null);
+  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
   
-  const reminders = [
+  const reminders: Reminder[] = [
     { id: '1', type: 'Rent Due', schedule: '3 days before due date', channels: ['Email', 'SMS'], active: true },
     { id: '2', type: 'Rent Overdue', schedule: '1 day after due date', channels: ['Email', 'SMS', 'Push'], active: true },
     { id: '3', type: 'Lease Renewal', schedule: '30 days before expiry', channels: ['Email'], active: true },

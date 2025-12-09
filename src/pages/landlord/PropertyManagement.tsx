@@ -27,6 +27,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
+interface Property {
+  id: string;
+  name: string;
+  address: string;
+  units: number;
+  occupied: number;
+  revenue: number;
+  image: string;
+}
+
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
   { icon: Building2, label: "Properties", href: "/landlord/properties" },
@@ -43,11 +53,11 @@ const navLinks = [
 const PropertyManagement = () => {
   const navigate = useNavigate();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isViewDetailsOpen, setIsViewDetailsOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   
-  const properties = [
+  const properties: Property[] = [
     {
       id: '1',
       name: 'Sunset Apartments',

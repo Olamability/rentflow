@@ -19,6 +19,28 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+interface Application {
+  id: string;
+  tenantName: string;
+  unitNumber: string;
+  moveInDate: string;
+  employer: string;
+  position: string;
+  income: number;
+  referenceName: string;
+  referencePhone: string;
+  status: string;
+}
+
+interface Unit {
+  id: string;
+  property: string;
+  unit: string;
+  tenant: string | null;
+  rent: number;
+  status: string;
+}
+
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
   { icon: Building2, label: "Properties", href: "/landlord/properties" },
@@ -34,11 +56,11 @@ const navLinks = [
 
 const UnitManagement = () => {
   const navigate = useNavigate();
-  const [selectedApplication, setSelectedApplication] = useState<any>(null);
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
-  const [selectedUnit, setSelectedUnit] = useState<any>(null);
+  const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
   const [isManageUnitOpen, setIsManageUnitOpen] = useState(false);
-  const [applications, setApplications] = useState([
+  const [applications, setApplications] = useState<Application[]>([
     { 
       id: '1', 
       tenantName: 'Emily Brown', 
@@ -72,14 +94,13 @@ const UnitManagement = () => {
     { id: '4', property: 'Oak Street Condos', unit: '1A', tenant: null, rent: 2000, status: 'vacant' },
   ];
 
-  const handleApprove = (applicationId: string) => {
+  const handleApplicationAction = (applicationId: string, action: 'approve' | 'reject') => {
     setApplications(prev => prev.filter(app => app.id !== applicationId));
-    toast.success("Application approved and removed from pending list");
-  };
-
-  const handleReject = (applicationId: string) => {
-    setApplications(prev => prev.filter(app => app.id !== applicationId));
-    toast.error("Application rejected and removed from list");
+    if (action === 'approve') {
+      toast.success("Application approved and removed from pending list");
+    } else {
+      toast.error("Application rejected and removed from list");
+    }
   };
 
   return (
@@ -94,8 +115,8 @@ const UnitManagement = () => {
           open={isReviewDialogOpen}
           onOpenChange={setIsReviewDialogOpen}
           application={selectedApplication}
-          onApprove={() => handleApprove(selectedApplication.id)}
-          onReject={() => handleReject(selectedApplication.id)}
+          onApprove={() => handleApplicationAction(selectedApplication.id, 'approve')}
+          onReject={() => handleApplicationAction(selectedApplication.id, 'reject')}
         />
       )}
 

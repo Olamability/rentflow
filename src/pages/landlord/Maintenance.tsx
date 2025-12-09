@@ -17,6 +17,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
+interface MaintenanceRequest {
+  id: string;
+  tenant: string;
+  unit: string;
+  issue: string;
+  priority: 'high' | 'medium' | 'low';
+  status: 'in_progress' | 'completed' | 'pending';
+  date: string;
+}
+
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
   { icon: Building2, label: "Properties", href: "/landlord/properties" },
@@ -31,11 +41,11 @@ const navLinks = [
 ];
 
 const Maintenance = () => {
-  const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isAssignWorkerOpen, setIsAssignWorkerOpen] = useState(false);
   
-  const requests = [
+  const requests: MaintenanceRequest[] = [
     { id: 'MR-001', tenant: 'Sarah Johnson', unit: 'Unit 4A', issue: 'Leaky faucet in bathroom', priority: 'medium', status: 'in_progress', date: '2024-12-03' },
     { id: 'MR-002', tenant: 'John Smith', unit: 'Unit 2B', issue: 'AC not cooling properly', priority: 'high', status: 'completed', date: '2024-11-15' },
     { id: 'MR-003', tenant: 'Mike Davis', unit: 'Unit 7C', issue: 'Broken window latch', priority: 'low', status: 'pending', date: '2024-12-07' },
