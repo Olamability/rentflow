@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, Building2, Users, CreditCard, Wrench, FileText, Settings,
@@ -5,6 +6,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -20,7 +22,17 @@ const navLinks = [
 ];
 
 const Subscription = () => {
-  const currentPlan = 'pro';
+  const [currentPlan, setCurrentPlan] = useState('pro');
+
+  const handleUpgrade = () => {
+    setCurrentPlan('pro');
+    toast.success("Successfully upgraded to Pro plan!");
+  };
+
+  const handleDowngrade = () => {
+    setCurrentPlan('free');
+    toast.info("Downgraded to Free plan");
+  };
 
   const features = {
     free: ['1 Property', 'Basic rent collection', 'Email support'],
@@ -54,7 +66,7 @@ const Subscription = () => {
             {currentPlan === 'free' ? (
               <Button variant="outline" className="w-full" disabled>Current Plan</Button>
             ) : (
-              <Button variant="outline" className="w-full">Downgrade</Button>
+              <Button variant="outline" className="w-full" onClick={handleDowngrade}>Downgrade</Button>
             )}
           </Card>
 
@@ -80,7 +92,7 @@ const Subscription = () => {
             {currentPlan === 'pro' ? (
               <Button className="w-full" disabled>Current Plan</Button>
             ) : (
-              <Button className="w-full">Upgrade to Pro</Button>
+              <Button className="w-full" onClick={handleUpgrade}>Upgrade to Pro</Button>
             )}
           </Card>
         </div>

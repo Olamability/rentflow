@@ -7,6 +7,39 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ApplicationReviewDialog } from "@/components/landlord/ApplicationReviewDialog";
+import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+
+interface Application {
+  id: string;
+  tenantName: string;
+  unitNumber: string;
+  moveInDate: string;
+  employer: string;
+  position: string;
+  income: number;
+  referenceName: string;
+  referencePhone: string;
+  status: string;
+}
+
+interface Unit {
+  id: string;
+  property: string;
+  unit: string;
+  tenant: string | null;
+  rent: number;
+  status: string;
+}
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -22,17 +55,12 @@ const navLinks = [
 ];
 
 const UnitManagement = () => {
-  const [selectedApplication, setSelectedApplication] = useState<any>(null);
+  const navigate = useNavigate();
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
-  
-  const units = [
-    { id: '1', property: 'Sunset Apartments', unit: '4A', tenant: 'Sarah Johnson', rent: 1500, status: 'occupied' },
-    { id: '2', property: 'Sunset Apartments', unit: '2B', tenant: 'John Smith', rent: 1200, status: 'occupied' },
-    { id: '3', property: 'Sunset Apartments', unit: '7C', tenant: 'Mike Davis', rent: 1800, status: 'occupied' },
-    { id: '4', property: 'Oak Street Condos', unit: '1A', tenant: null, rent: 2000, status: 'vacant' },
-  ];
-
-  const applications = [
+  const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
+  const [isManageUnitOpen, setIsManageUnitOpen] = useState(false);
+  const [applications, setApplications] = useState<Application[]>([
     { 
       id: '1', 
       tenantName: 'Emily Brown', 
@@ -57,7 +85,23 @@ const UnitManagement = () => {
       referencePhone: '+1 (555) 888-7777',
       status: 'pending' 
     },
+  ]);
+  
+  const units = [
+    { id: '1', property: 'Sunset Apartments', unit: '4A', tenant: 'Sarah Johnson', rent: 1500, status: 'occupied' },
+    { id: '2', property: 'Sunset Apartments', unit: '2B', tenant: 'John Smith', rent: 1200, status: 'occupied' },
+    { id: '3', property: 'Sunset Apartments', unit: '7C', tenant: 'Mike Davis', rent: 1800, status: 'occupied' },
+    { id: '4', property: 'Oak Street Condos', unit: '1A', tenant: null, rent: 2000, status: 'vacant' },
   ];
+
+  const handleApplicationAction = (applicationId: string, action: 'approve' | 'reject') => {
+    setApplications(prev => prev.filter(app => app.id !== applicationId));
+    if (action === 'approve') {
+      toast.success("Application approved and removed from pending list");
+    } else {
+      toast.error("Application rejected and removed from list");
+    }
+  };
 
   return (
     <DashboardLayout
@@ -71,10 +115,71 @@ const UnitManagement = () => {
           open={isReviewDialogOpen}
           onOpenChange={setIsReviewDialogOpen}
           application={selectedApplication}
-          onApprove={() => console.log("Approved")}
-          onReject={() => console.log("Rejected")}
+          onApprove={() => {
+            if (selectedApplication?.id) {
+              handleApplicationAction(selectedApplication.id, 'approve');
+            }
+          }}
+          onReject={() => {
+            if (selectedApplication?.id) {
+              handleApplicationAction(selectedApplication.id, 'reject');
+            }
+          }}
         />
       )}
+
+      {/* Manage Unit Dialog */}
+      <Dialog open={isManageUnitOpen} onOpenChange={setIsManageUnitOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Manage Unit</DialogTitle>
+            <DialogDescription>
+              View and manage unit details
+            </DialogDescription>
+          </DialogHeader>
+          {selectedUnit && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Property</Label>
+                  <p className="text-foreground font-medium">{selectedUnit.property}</p>
+                </div>
+                <div>
+                  <Label>Unit Number</Label>
+                  <p className="text-foreground font-medium">{selectedUnit.unit}</p>
+                </div>
+                <div>
+                  <Label>Current Tenant</Label>
+                  <p className="text-foreground font-medium">{selectedUnit.tenant || 'Vacant'}</p>
+                </div>
+                <div>
+                  <Label>Monthly Rent</Label>
+                  <p className="text-foreground font-medium">${selectedUnit.rent}</p>
+                </div>
+                <div>
+                  <Label>Status</Label>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    selectedUnit.status === 'occupied' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
+                  }`}>
+                    {selectedUnit.status}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" onClick={() => setIsManageUnitOpen(false)}>
+                  Close
+                </Button>
+                <Button onClick={() => {
+                  toast.success("Unit settings updated");
+                  setIsManageUnitOpen(false);
+                }}>
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <Tabs defaultValue="units" className="space-y-4">
         <TabsList>
@@ -118,7 +223,15 @@ const UnitManagement = () => {
                     </span>
                   </td>
                   <td className="p-4">
-                    <button className="text-accent hover:underline text-sm">Manage</button>
+                    <button 
+                      className="text-accent hover:underline text-sm"
+                      onClick={() => {
+                        setSelectedUnit(unit);
+                        setIsManageUnitOpen(true);
+                      }}
+                    >
+                      Manage
+                    </button>
                   </td>
                 </tr>
               ))}

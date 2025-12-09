@@ -7,6 +7,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CreateReminderDialog } from "@/components/landlord/CreateReminderDialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+
+interface Reminder {
+  id: string;
+  type: string;
+  schedule: string;
+  channels: string[];
+  active: boolean;
+}
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -23,8 +42,10 @@ const navLinks = [
 
 const AutomatedReminders = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
   
-  const reminders = [
+  const reminders: Reminder[] = [
     { id: '1', type: 'Rent Due', schedule: '3 days before due date', channels: ['Email', 'SMS'], active: true },
     { id: '2', type: 'Rent Overdue', schedule: '1 day after due date', channels: ['Email', 'SMS', 'Push'], active: true },
     { id: '3', type: 'Lease Renewal', schedule: '30 days before expiry', channels: ['Email'], active: true },
@@ -49,6 +70,80 @@ const AutomatedReminders = () => {
         onOpenChange={setIsCreateDialogOpen}
         onReminderCreated={() => console.log("Reminder created")}
       />
+
+      {/* Edit Reminder Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Reminder</DialogTitle>
+            <DialogDescription>
+              Update the reminder settings
+            </DialogDescription>
+          </DialogHeader>
+          {selectedReminder && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-type">Reminder Type</Label>
+                <Input 
+                  id="edit-type" 
+                  defaultValue={selectedReminder.type}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-schedule">Schedule</Label>
+                <Input 
+                  id="edit-schedule" 
+                  defaultValue={selectedReminder.schedule}
+                />
+              </div>
+              <div>
+                <Label>Notification Channels</Label>
+                <div className="space-y-2 mt-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="edit-email" 
+                      defaultChecked={selectedReminder.channels.includes('Email')}
+                    />
+                    <label htmlFor="edit-email" className="text-sm">Email</label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="edit-sms" 
+                      defaultChecked={selectedReminder.channels.includes('SMS')}
+                    />
+                    <label htmlFor="edit-sms" className="text-sm">SMS</label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="edit-push" 
+                      defaultChecked={selectedReminder.channels.includes('Push')}
+                    />
+                    <label htmlFor="edit-push" className="text-sm">Push Notification</label>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="edit-active" 
+                  defaultChecked={selectedReminder.active}
+                />
+                <label htmlFor="edit-active" className="text-sm">Active</label>
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={() => {
+                  toast.success("Reminder updated successfully");
+                  setIsEditDialogOpen(false);
+                }}>
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
       
       <div className="space-y-4">
         {reminders.map((reminder) => (
@@ -71,7 +166,16 @@ const AutomatedReminders = () => {
                 }`}>
                   {reminder.active ? 'Active' : 'Inactive'}
                 </span>
-                <Button variant="outline" size="sm">Edit</Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setSelectedReminder(reminder);
+                    setIsEditDialogOpen(true);
+                  }}
+                >
+                  Edit
+                </Button>
               </div>
             </div>
           </Card>
