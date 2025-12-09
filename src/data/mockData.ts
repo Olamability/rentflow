@@ -303,7 +303,7 @@ export const mockNotifications: Notification[] = [
     type: 'warning',
     isRead: false,
     createdAt: new Date('2024-12-08'),
-    actionUrl: '/tenant/payments',
+    actionUrl: '/tenant/rent',
   },
   {
     id: 'notif-2',
