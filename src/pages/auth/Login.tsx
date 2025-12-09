@@ -19,7 +19,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       role: userType,
@@ -81,7 +81,11 @@ const Login = () => {
             </Alert>
           )}
 
-          <Tabs value={userType} onValueChange={(v) => setUserType(v as any)} className="mb-6">
+          <Tabs value={userType} onValueChange={(v) => {
+            const newRole = v as 'tenant' | 'landlord' | 'admin';
+            setUserType(newRole);
+            setValue('role', newRole);
+          }} className="mb-6">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="tenant">Tenant</TabsTrigger>
               <TabsTrigger value="landlord">Landlord</TabsTrigger>
