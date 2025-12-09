@@ -46,18 +46,6 @@ const Maintenance = () => {
         onRequestSubmitted={() => console.log("Request submitted")}
       />
       
-      {/* New Request Form - Keep for quick access */}
-      <Card className="p-6 mb-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Submit New Request</h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          Click "New Request" above to submit a detailed maintenance request with photos or videos.
-        </p>
-        <Button variant="outline" className="w-full" onClick={() => setIsRequestDialogOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Submit Maintenance Request
-        </Button>
-      </Card>
-
       {/* Existing Requests */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground">Your Requests</h3>

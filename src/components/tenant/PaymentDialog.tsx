@@ -124,7 +124,8 @@ export const PaymentDialog = ({ open, onOpenChange, amount, property, onPaymentS
                   <Label htmlFor="cvv">CVV</Label>
                   <Input
                     id="cvv"
-                    type="password"
+                    type="text"
+                    pattern="[0-9]{3,4}"
                     value={cardDetails.cvv}
                     onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })}
                     placeholder="123"

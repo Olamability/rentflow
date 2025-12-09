@@ -25,7 +25,20 @@ export const ReceiptViewer = ({ open, onOpenChange, receipt }: ReceiptViewerProp
   };
 
   const handlePrint = () => {
-    window.print();
+    // Create a print window with only the receipt content
+    const printContent = document.getElementById('receipt-content');
+    if (printContent) {
+      const printWindow = window.open('', '', 'height=600,width=800');
+      if (printWindow) {
+        printWindow.document.write('<html><head><title>Receipt</title>');
+        printWindow.document.write('<style>body{font-family:Arial,sans-serif;padding:20px;}</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(printContent.innerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
     toast.success("Opening print dialog...");
   };
 

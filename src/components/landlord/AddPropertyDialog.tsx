@@ -161,6 +161,7 @@ export const AddPropertyDialog = ({ open, onOpenChange, onPropertyAdded }: AddPr
                 id="totalUnits"
                 type="number"
                 min="1"
+                max="500"
                 value={formData.totalUnits}
                 onChange={(e) => setFormData({ ...formData, totalUnits: e.target.value })}
                 placeholder="10"

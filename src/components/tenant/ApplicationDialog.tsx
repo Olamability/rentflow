@@ -114,6 +114,8 @@ export const ApplicationDialog = ({ open, onOpenChange, propertyName }: Applicat
                 <Input
                   id="income"
                   type="number"
+                  min="0"
+                  max="10000000"
                   value={formData.income}
                   onChange={(e) => setFormData({ ...formData, income: e.target.value })}
                   placeholder="50000"

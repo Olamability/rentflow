@@ -124,7 +124,7 @@ export const CreateReminderDialog = ({ open, onOpenChange, onReminderCreated }: 
                 <Checkbox 
                   id="email" 
                   checked={channels.email}
-                  onCheckedChange={(checked) => setChannels({ ...channels, email: checked as boolean })}
+                  onCheckedChange={(checked) => setChannels({ ...channels, email: !!checked })}
                 />
                 <Label htmlFor="email" className="cursor-pointer font-normal">Email</Label>
               </div>
@@ -132,7 +132,7 @@ export const CreateReminderDialog = ({ open, onOpenChange, onReminderCreated }: 
                 <Checkbox 
                   id="sms" 
                   checked={channels.sms}
-                  onCheckedChange={(checked) => setChannels({ ...channels, sms: checked as boolean })}
+                  onCheckedChange={(checked) => setChannels({ ...channels, sms: !!checked })}
                 />
                 <Label htmlFor="sms" className="cursor-pointer font-normal">SMS</Label>
               </div>
@@ -140,7 +140,7 @@ export const CreateReminderDialog = ({ open, onOpenChange, onReminderCreated }: 
                 <Checkbox 
                   id="push" 
                   checked={channels.push}
-                  onCheckedChange={(checked) => setChannels({ ...channels, push: checked as boolean })}
+                  onCheckedChange={(checked) => setChannels({ ...channels, push: !!checked })}
                 />
                 <Label htmlFor="push" className="cursor-pointer font-normal">Push Notification</Label>
               </div>
