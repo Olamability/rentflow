@@ -14,7 +14,9 @@ export interface Coordinates {
  * @returns Distance in miles
  */
 export const calculateDistance = (coord1: Coordinates, coord2: Coordinates): number => {
-  const R = 3959; // Earth's radius in miles
+  const EARTH_RADIUS_MILES = 3959; // Earth's radius in miles
+  const DISTANCE_PRECISION_MULTIPLIER = 10; // For rounding to 1 decimal place
+  
   const dLat = toRadians(coord2.latitude - coord1.latitude);
   const dLon = toRadians(coord2.longitude - coord1.longitude);
   
@@ -26,9 +28,9 @@ export const calculateDistance = (coord1: Coordinates, coord2: Coordinates): num
     Math.sin(dLon / 2);
   
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c;
+  const distance = EARTH_RADIUS_MILES * c;
   
-  return Math.round(distance * 10) / 10; // Round to 1 decimal place
+  return Math.round(distance * DISTANCE_PRECISION_MULTIPLIER) / DISTANCE_PRECISION_MULTIPLIER;
 };
 
 /**

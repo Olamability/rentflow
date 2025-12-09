@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getUserLocation, calculateDistance, type Coordinates } from '@/lib/geolocation';
 
 interface PropertyWithDistance {
   id: string;
+  latitude?: number;
+  longitude?: number;
   distance?: number;
   [key: string]: any;
 }
@@ -48,7 +50,7 @@ export const useLocationSort = <T extends PropertyWithDistance>(
   }, [autoRequest, hasRequestedLocation, requestUserLocation]);
 
   // Calculate distances and sort properties
-  const sortedProperties = useCallback(() => {
+  const sortedProperties = useMemo(() => {
     if (!userLocation) {
       return properties;
     }
@@ -81,7 +83,7 @@ export const useLocationSort = <T extends PropertyWithDistance>(
   }, []);
 
   return {
-    sortedProperties: sortedProperties(),
+    sortedProperties,
     userLocation,
     isLoadingLocation,
     locationError,

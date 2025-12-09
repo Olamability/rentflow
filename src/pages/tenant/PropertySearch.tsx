@@ -27,7 +27,8 @@ const PropertySearch = () => {
   const [selectedProperty, setSelectedProperty] = useState<{ id: string; name: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Mock properties with coordinates (San Francisco area)
+  // Sample properties with coordinates (San Francisco area)
+  // In production, these would be fetched from the backend API
   const properties = [
     {
       id: '1',
@@ -165,7 +166,7 @@ const PropertySearch = () => {
                 className="w-full h-48 object-cover"
               />
               {property.distance !== undefined && (
-                <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">
+                <Badge variant="secondary" className="absolute top-2 right-2">
                   <MapPin className="w-3 h-3 mr-1" />
                   {formatDistance(property.distance)} away
                 </Badge>
