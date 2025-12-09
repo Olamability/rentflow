@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Building2, Mail, Phone, User, Bell as BellIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Building2, Mail, Phone, User, Bell as BellIcon, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,20 +7,21 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 const Settings = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="h-16 bg-card border-b border-border flex items-center px-6">
-        <Link to="/" className="flex items-center gap-3">
+        <Button variant="ghost" onClick={() => navigate(-1)} className="mr-4">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+        <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
             <Building2 className="w-6 h-6 text-accent-foreground" />
           </div>
           <span className="text-xl font-semibold">RentFlow</span>
-        </Link>
-        <div className="ml-auto">
-          <Link to="/landlord/dashboard">
-            <Button variant="ghost">Back to Dashboard</Button>
-          </Link>
         </div>
       </header>
 
