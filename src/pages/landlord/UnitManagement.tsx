@@ -115,8 +115,14 @@ const UnitManagement = () => {
           open={isReviewDialogOpen}
           onOpenChange={setIsReviewDialogOpen}
           application={selectedApplication}
-          onApprove={() => handleApplicationAction(selectedApplication.id, 'approve')}
-          onReject={() => handleApplicationAction(selectedApplication.id, 'reject')}
+          onApprove={() => {
+            const appId = selectedApplication.id;
+            handleApplicationAction(appId, 'approve');
+          }}
+          onReject={() => {
+            const appId = selectedApplication.id;
+            handleApplicationAction(appId, 'reject');
+          }}
         />
       )}
 
