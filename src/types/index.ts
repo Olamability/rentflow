@@ -45,6 +45,8 @@ export interface Property {
   images: string[];
   amenities: string[];
   totalUnits: number;
+  latitude?: number;
+  longitude?: number;
   createdAt: Date;
   updatedAt: Date;
 }
