@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Building2, 
@@ -16,7 +17,14 @@ import {
   ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AddPropertyDialog } from "@/components/landlord/AddPropertyDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -49,6 +57,9 @@ const properties = [
 ];
 
 const LandlordDashboard = () => {
+  const navigate = useNavigate();
+  const [isAddPropertyDialogOpen, setIsAddPropertyDialogOpen] = useState(false);
+
   return (
     <DashboardLayout
       navLinks={navLinks}
@@ -56,12 +67,20 @@ const LandlordDashboard = () => {
       pageTitle="Dashboard"
       pageDescription="Welcome back, James"
       headerActions={
-        <Button variant="accent" size="sm">
+        <Button variant="accent" size="sm" onClick={() => setIsAddPropertyDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Add Property
         </Button>
       }
     >
+      <AddPropertyDialog 
+        open={isAddPropertyDialogOpen} 
+        onOpenChange={setIsAddPropertyDialogOpen}
+        onPropertyAdded={() => {
+          console.log("Property added from dashboard");
+        }}
+      />
+      
           {/* Stats grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {stats.map((stat) => (
@@ -86,7 +105,7 @@ const LandlordDashboard = () => {
             <div className="lg:col-span-2 bg-card rounded-xl border border-border">
               <div className="p-6 border-b border-border flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-foreground">Recent Payments</h2>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" onClick={() => navigate('/landlord/rent-collection')}>
                   View All <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
@@ -126,14 +145,30 @@ const LandlordDashboard = () => {
             <div className="bg-card rounded-xl border border-border">
               <div className="p-6 border-b border-border flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-foreground">Properties</h2>
-                <button className="p-1 text-muted-foreground hover:text-foreground">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="p-1 text-muted-foreground hover:text-foreground">
+                      <MoreVertical className="w-5 h-5" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => navigate('/landlord/properties')}>
+                      View All Properties
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIsAddPropertyDialogOpen(true)}>
+                      Add Property
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <div className="p-4">
                 <div className="space-y-4">
                   {properties.map((property, index) => (
-                    <div key={index} className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer">
+                    <div 
+                      key={index} 
+                      className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer"
+                      onClick={() => navigate('/landlord/properties')}
+                    >
                       <img 
                         src={property.image} 
                         alt={property.name}
@@ -158,7 +193,7 @@ const LandlordDashboard = () => {
           <div className="mt-6 bg-card rounded-xl border border-border p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-foreground">Upcoming</h2>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => navigate('/landlord/rent-collection')}>
                 <Calendar className="w-4 h-4 mr-2" />
                 View Calendar
               </Button>

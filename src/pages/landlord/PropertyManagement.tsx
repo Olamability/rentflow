@@ -15,6 +15,17 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddPropertyDialog } from "@/components/landlord/AddPropertyDialog";
+import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -30,7 +41,11 @@ const navLinks = [
 ];
 
 const PropertyManagement = () => {
+  const navigate = useNavigate();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [isViewDetailsOpen, setIsViewDetailsOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   
   const properties = [
     {
@@ -79,10 +94,124 @@ const PropertyManagement = () => {
         open={isAddDialogOpen} 
         onOpenChange={setIsAddDialogOpen}
         onPropertyAdded={() => {
-          // Handle refresh or update of property list
           console.log("Property added");
         }}
       />
+
+      {/* View Details Dialog */}
+      <Dialog open={isViewDetailsOpen} onOpenChange={setIsViewDetailsOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Property Details</DialogTitle>
+            <DialogDescription>
+              View detailed information about this property
+            </DialogDescription>
+          </DialogHeader>
+          {selectedProperty && (
+            <div className="space-y-4">
+              <div>
+                <img 
+                  src={selectedProperty.image} 
+                  alt={selectedProperty.name}
+                  className="w-full h-64 object-cover rounded-lg"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Property Name</Label>
+                  <p className="text-foreground font-medium">{selectedProperty.name}</p>
+                </div>
+                <div>
+                  <Label>Address</Label>
+                  <p className="text-foreground font-medium">{selectedProperty.address}</p>
+                </div>
+                <div>
+                  <Label>Total Units</Label>
+                  <p className="text-foreground font-medium">{selectedProperty.units}</p>
+                </div>
+                <div>
+                  <Label>Occupied Units</Label>
+                  <p className="text-foreground font-medium">{selectedProperty.occupied}</p>
+                </div>
+                <div>
+                  <Label>Monthly Revenue</Label>
+                  <p className="text-foreground font-medium">${selectedProperty.revenue.toLocaleString()}</p>
+                </div>
+                <div>
+                  <Label>Occupancy Rate</Label>
+                  <p className="text-foreground font-medium">
+                    {((selectedProperty.occupied / selectedProperty.units) * 100).toFixed(0)}%
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Property Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Property</DialogTitle>
+            <DialogDescription>
+              Update the property information
+            </DialogDescription>
+          </DialogHeader>
+          {selectedProperty && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-name">Property Name</Label>
+                <Input 
+                  id="edit-name" 
+                  defaultValue={selectedProperty.name}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-address">Address</Label>
+                <Input 
+                  id="edit-address" 
+                  defaultValue={selectedProperty.address}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit-units">Total Units</Label>
+                  <Input 
+                    id="edit-units" 
+                    type="number"
+                    defaultValue={selectedProperty.units}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-revenue">Monthly Revenue</Label>
+                  <Input 
+                    id="edit-revenue" 
+                    type="number"
+                    defaultValue={selectedProperty.revenue}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsEditDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={() => {
+                    toast.success("Property updated successfully");
+                    setIsEditDialogOpen(false);
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {properties.map((property) => (
@@ -108,8 +237,27 @@ const PropertyManagement = () => {
               </div>
               
               <div className="flex gap-2">
-                <Button variant="outline" className="flex-1" size="sm">View Details</Button>
-                <Button variant="outline" size="sm">Edit</Button>
+                <Button 
+                  variant="outline" 
+                  className="flex-1" 
+                  size="sm"
+                  onClick={() => {
+                    setSelectedProperty(property);
+                    setIsViewDetailsOpen(true);
+                  }}
+                >
+                  View Details
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setSelectedProperty(property);
+                    setIsEditDialogOpen(true);
+                  }}
+                >
+                  Edit
+                </Button>
               </div>
             </div>
           </div>
