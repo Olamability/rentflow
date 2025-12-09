@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, CreditCard, Wrench, FileText, Settings, Search, User, Download
@@ -5,6 +6,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { DocumentViewerDialog } from "@/components/tenant/DocumentViewerDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
@@ -17,6 +19,8 @@ const navLinks = [
 ];
 
 const Agreements = () => {
+  const [isDocumentViewerOpen, setIsDocumentViewerOpen] = useState(false);
+
   const agreement = {
     id: 'AGR-001',
     property: 'Sunset Apartments - Unit 4A',
@@ -34,6 +38,12 @@ const Agreements = () => {
       pageTitle="Tenancy Agreements"
       pageDescription="View and manage your lease agreements"
     >
+      <DocumentViewerDialog
+        open={isDocumentViewerOpen}
+        onOpenChange={setIsDocumentViewerOpen}
+        agreement={agreement}
+      />
+
       <Card className="p-8 max-w-4xl mx-auto">
         <div className="flex items-start justify-between mb-6">
           <div>
@@ -86,7 +96,7 @@ const Agreements = () => {
           <Button 
             variant="outline" 
             className="flex-1"
-            onClick={() => toast.info("Opening full document...")}
+            onClick={() => setIsDocumentViewerOpen(true)}
           >
             View Full Document
           </Button>

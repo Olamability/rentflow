@@ -6,6 +6,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PaymentDialog } from "@/components/tenant/PaymentDialog";
+import { AddPaymentMethodDialog } from "@/components/tenant/AddPaymentMethodDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
@@ -19,6 +20,7 @@ const navLinks = [
 
 const RentPayment = () => {
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+  const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
   
   const currentRent = {
     amount: 1500,
@@ -46,6 +48,12 @@ const RentPayment = () => {
         amount={currentRent.amount}
         property={currentRent.property}
         onPaymentSuccess={() => console.log("Payment successful")}
+      />
+
+      <AddPaymentMethodDialog
+        open={isAddPaymentMethodDialogOpen}
+        onOpenChange={setIsAddPaymentMethodDialogOpen}
+        onPaymentMethodAdded={() => console.log("Payment method added")}
       />
       
       <div className="max-w-4xl mx-auto">
@@ -89,7 +97,7 @@ const RentPayment = () => {
               <span className="text-xs bg-accent/10 text-accent px-2 py-1 rounded">Default</span>
             </div>
           </div>
-          <Button variant="outline" className="w-full mt-4">Add Payment Method</Button>
+          <Button variant="outline" className="w-full mt-4" onClick={() => setIsAddPaymentMethodDialogOpen(true)}>Add Payment Method</Button>
         </Card>
 
         {/* Payment History */}

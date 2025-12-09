@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MaintenanceRequestDialog } from "@/components/tenant/MaintenanceRequestDialog";
+import { MaintenanceDetailsDialog } from "@/components/tenant/MaintenanceDetailsDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
@@ -21,11 +22,18 @@ const navLinks = [
 
 const Maintenance = () => {
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<typeof requests[0] | null>(null);
   
   const requests = [
-    { id: 'MR-001', title: 'Leaky faucet in bathroom', status: 'in_progress', priority: 'medium', date: '2024-12-03', lastUpdate: 'Technician assigned' },
-    { id: 'MR-002', title: 'AC not cooling properly', status: 'completed', priority: 'high', date: '2024-11-15', lastUpdate: 'Repair completed' },
+    { id: 'MR-001', title: 'Leaky faucet in bathroom', status: 'in_progress', priority: 'medium', date: '2024-12-03', lastUpdate: 'Technician assigned', description: 'The faucet in the master bathroom is leaking continuously, wasting water.', category: 'plumbing', assignedTo: 'John Tech', estimatedCompletion: '2024-12-10' },
+    { id: 'MR-002', title: 'AC not cooling properly', status: 'completed', priority: 'high', date: '2024-11-15', lastUpdate: 'Repair completed', description: 'Air conditioning unit is running but not cooling the apartment adequately.', category: 'hvac', assignedTo: 'Cool Air Services', estimatedCompletion: '2024-11-20' },
   ];
+
+  const handleViewDetails = (request: typeof requests[0]) => {
+    setSelectedRequest(request);
+    setIsDetailsDialogOpen(true);
+  };
 
   return (
     <DashboardLayout
@@ -44,6 +52,12 @@ const Maintenance = () => {
         open={isRequestDialogOpen}
         onOpenChange={setIsRequestDialogOpen}
         onRequestSubmitted={() => console.log("Request submitted")}
+      />
+
+      <MaintenanceDetailsDialog
+        open={isDetailsDialogOpen}
+        onOpenChange={setIsDetailsDialogOpen}
+        request={selectedRequest}
       />
       
       {/* Existing Requests */}
@@ -67,7 +81,7 @@ const Maintenance = () => {
                 <p className="text-sm text-muted-foreground">Submitted: {request.date}</p>
                 <p className="text-sm text-muted-foreground">Last update: {request.lastUpdate}</p>
               </div>
-              <Button variant="outline" size="sm">View Details</Button>
+              <Button variant="outline" size="sm" onClick={() => handleViewDetails(request)}>View Details</Button>
             </div>
           </Card>
         ))}
