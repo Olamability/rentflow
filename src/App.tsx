@@ -36,6 +36,9 @@ import UserManagement from "./pages/admin/UserManagement";
 import PlatformAnalytics from "./pages/admin/PlatformAnalytics";
 import SupportTickets from "./pages/admin/SupportTickets";
 import SubscriptionManagement from "./pages/admin/SubscriptionManagement";
+import SystemConfiguration from "./pages/admin/SystemConfiguration";
+import AuditLog from "./pages/admin/AuditLog";
+import PlatformAnnouncements from "./pages/admin/PlatformAnnouncements";
 
 // Shared Pages
 import Settings from "./pages/shared/Settings";
@@ -110,6 +113,9 @@ const App = () => (
           <Route path="/admin/analytics" element={<PlatformAnalytics />} />
           <Route path="/admin/support" element={<SupportTickets />} />
           <Route path="/admin/subscriptions" element={<SubscriptionManagement />} />
+          <Route path="/admin/configuration" element={<SystemConfiguration />} />
+          <Route path="/admin/audit-log" element={<AuditLog />} />
+          <Route path="/admin/announcements" element={<PlatformAnnouncements />} />
           
           {/* Shared Routes */}
           <Route path="/settings" element={<Settings />} />
