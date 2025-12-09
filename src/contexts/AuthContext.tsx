@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { User, UserRole } from '@/types';
+import { calculateProfileCompleteness } from '@/lib/profileUtils';
 
 interface AuthContextType {
   user: User | null;
@@ -10,6 +11,7 @@ interface AuthContextType {
   logout: () => void;
   register: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
+  getProfileCompleteness: () => number;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -202,6 +204,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return;
 
     const updatedUser = { ...user, ...updates };
+    
+    // Calculate and update profile completeness
+    const completeness = calculateProfileCompleteness(updatedUser);
+    updatedUser.profileCompleteness = completeness;
+    updatedUser.profileComplete = completeness >= 70;
+    
     setUser(updatedUser);
 
     const stored = localStorage.getItem(AUTH_STORAGE_KEY);
@@ -212,6 +220,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const getProfileCompleteness = (): number => {
+    if (!user) return 0;
+    return calculateProfileCompleteness(user);
+  };
+
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
@@ -220,6 +233,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     logout,
     register,
     updateUser,
+    getProfileCompleteness,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

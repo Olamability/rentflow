@@ -1,13 +1,6 @@
 import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
-  Building2, 
-  Home, 
-  Users, 
-  CreditCard, 
-  Wrench, 
-  FileText, 
-  Settings, 
   Plus,
   TrendingUp,
   TrendingDown,
@@ -25,16 +18,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const navLinks = [
-  { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
-  { icon: Building2, label: "Properties", href: "/landlord/properties" },
-  { icon: Users, label: "Units", href: "/landlord/units" },
-  { icon: CreditCard, label: "Rent Collection", href: "/landlord/rent-collection" },
-  { icon: Wrench, label: "Maintenance", href: "/landlord/maintenance" },
-  { icon: FileText, label: "Agreements", href: "/landlord/agreements" },
-  { icon: Settings, label: "Settings", href: "/settings" },
-];
+import { useAuth } from "@/contexts/AuthContext";
+import { ProfileCompletionBanner } from "@/components/profile/ProfileCompletionBanner";
+import { landlordNavLinks } from "@/config/navigation";
+import { Home, FileText, Wrench } from "lucide-react";
 
 const stats = [
   { label: "Total Revenue", value: "$45,231", change: "+12.5%", trend: "up", icon: DollarSign },
@@ -58,14 +45,16 @@ const properties = [
 
 const LandlordDashboard = () => {
   const navigate = useNavigate();
+  const { user, getProfileCompleteness } = useAuth();
   const [isAddPropertyDialogOpen, setIsAddPropertyDialogOpen] = useState(false);
+  const completeness = getProfileCompleteness();
 
   return (
     <DashboardLayout
-      navLinks={navLinks}
-      userName="James Wilson"
+      navLinks={landlordNavLinks}
+      userName={user?.name || "User"}
       pageTitle="Dashboard"
-      pageDescription="Welcome back, James"
+      pageDescription={`Welcome back, ${user?.name?.split(' ')[0] || 'User'}`}
       headerActions={
         <Button variant="accent" size="sm" onClick={() => setIsAddPropertyDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
@@ -81,6 +70,13 @@ const LandlordDashboard = () => {
         }}
       />
       
+          {/* Profile Completion Banner */}
+          <ProfileCompletionBanner
+            completeness={completeness}
+            profileUrl="/landlord/profile"
+            className="mb-6"
+          />
+
           {/* Stats grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {stats.map((stat) => (
