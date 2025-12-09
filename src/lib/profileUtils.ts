@@ -39,7 +39,7 @@ export const calculateTenantProfileCompleteness = (user: Tenant): number => {
       profile.employment.status,
       profile.employment.employer,
       profile.employment.position,
-      profile.employment.monthlyIncome,
+      profile.employment.monthlyIncome !== undefined && profile.employment.monthlyIncome !== null && !isNaN(profile.employment.monthlyIncome),
     ];
     total += employmentFields.length;
     completed += employmentFields.filter(Boolean).length;
@@ -106,15 +106,22 @@ export const calculateLandlordProfileCompleteness = (user: Landlord): number => 
 
   // Business info (weight: 25%)
   if (profile.businessInfo) {
-    const businessFields = [
-      profile.businessInfo.registeredBusiness !== undefined,
-      profile.businessInfo.businessName,
-      profile.businessInfo.businessRegistrationNumber,
-    ];
-    total += businessFields.length;
-    completed += businessFields.filter(Boolean).length;
+    // Only count business fields if registered as a business
+    if (profile.businessInfo.registeredBusiness) {
+      const businessFields = [
+        true, // registeredBusiness is true
+        profile.businessInfo.businessName,
+        profile.businessInfo.businessRegistrationNumber,
+      ];
+      total += businessFields.length;
+      completed += businessFields.filter(Boolean).length;
+    } else {
+      // If not registered as business, count it as complete
+      total += 1;
+      completed += 1;
+    }
   } else {
-    total += 3;
+    total += 1;
   }
 
   // Bank details (weight: 25%)

@@ -286,7 +286,7 @@ const TenantProfile = () => {
               <Input
                 type="number"
                 value={formData.employment?.monthlyIncome || ""}
-                onChange={(e) => handleNestedChange("employment", "monthlyIncome", parseFloat(e.target.value))}
+                onChange={(e) => handleNestedChange("employment", "monthlyIncome", Number(e.target.value) || 0)}
                 className="mt-2"
                 placeholder="5000"
               />
@@ -296,7 +296,7 @@ const TenantProfile = () => {
               <Input
                 type="number"
                 value={formData.employment?.yearsEmployed || ""}
-                onChange={(e) => handleNestedChange("employment", "yearsEmployed", parseFloat(e.target.value))}
+                onChange={(e) => handleNestedChange("employment", "yearsEmployed", Number(e.target.value) || 0)}
                 className="mt-2"
                 placeholder="2"
               />

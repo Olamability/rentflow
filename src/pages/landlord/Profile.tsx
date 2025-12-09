@@ -80,9 +80,12 @@ const LandlordProfile = () => {
       return;
     }
 
-    if (formData.bankDetails && (!formData.bankDetails.bankName || !formData.bankDetails.accountNumber)) {
-      toast.error("Please complete your bank details to receive rent payments");
-      return;
+    if (formData.bankDetails && formData.bankDetails.bankName && formData.bankDetails.accountNumber) {
+      // If any bank field is filled, ensure the critical ones are complete
+      if (!formData.bankDetails.bankName.trim() || !formData.bankDetails.accountNumber.trim() || !formData.bankDetails.accountName.trim()) {
+        toast.error("Please complete all required bank details (bank name, account number, and account name)");
+        return;
+      }
     }
 
     // Update user with new profile data
