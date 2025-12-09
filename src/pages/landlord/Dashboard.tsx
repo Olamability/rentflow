@@ -1,13 +1,6 @@
 import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
-  Building2, 
-  Home, 
-  Users, 
-  CreditCard, 
-  Wrench, 
-  FileText, 
-  Settings, 
   Plus,
   TrendingUp,
   TrendingDown,
@@ -27,16 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProfileCompletionBanner } from "@/components/profile/ProfileCompletionBanner";
-
-const navLinks = [
-  { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
-  { icon: Building2, label: "Properties", href: "/landlord/properties" },
-  { icon: Users, label: "Units", href: "/landlord/units" },
-  { icon: CreditCard, label: "Rent Collection", href: "/landlord/rent-collection" },
-  { icon: Wrench, label: "Maintenance", href: "/landlord/maintenance" },
-  { icon: FileText, label: "Agreements", href: "/landlord/agreements" },
-  { icon: Settings, label: "Settings", href: "/settings" },
-];
+import { landlordNavLinks } from "@/config/navigation";
+import { Home, FileText, Wrench } from "lucide-react";
 
 const stats = [
   { label: "Total Revenue", value: "$45,231", change: "+12.5%", trend: "up", icon: DollarSign },
@@ -66,7 +51,7 @@ const LandlordDashboard = () => {
 
   return (
     <DashboardLayout
-      navLinks={navLinks}
+      navLinks={landlordNavLinks}
       userName={user?.name || "User"}
       pageTitle="Dashboard"
       pageDescription={`Welcome back, ${user?.name?.split(' ')[0] || 'User'}`}

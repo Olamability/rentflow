@@ -1,12 +1,5 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
-  Home, 
-  CreditCard, 
-  Wrench, 
-  FileText, 
-  Settings, 
-  Search,
-  User,
   MessageSquare,
   Calendar,
   Download,
@@ -19,16 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProfileCompletionBanner } from "@/components/profile/ProfileCompletionBanner";
-
-const navLinks = [
-  { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
-  { icon: Search, label: "Search Properties", href: "/tenant/search" },
-  { icon: CreditCard, label: "Rent Payment", href: "/tenant/rent" },
-  { icon: Wrench, label: "Maintenance", href: "/tenant/maintenance" },
-  { icon: FileText, label: "Agreements", href: "/tenant/agreements" },
-  { icon: User, label: "Profile", href: "/tenant/profile" },
-  { icon: Settings, label: "Settings", href: "/settings" },
-];
+import { tenantNavLinks } from "@/config/navigation";
+import { FileText } from "lucide-react";
 
 const paymentHistory = [
   { month: "December 2024", amount: "$1,500", date: "Dec 1", status: "Upcoming" },
@@ -54,7 +39,7 @@ const TenantDashboard = () => {
 
   return (
     <DashboardLayout
-      navLinks={navLinks}
+      navLinks={tenantNavLinks}
       userName={user?.name || "User"}
       pageTitle="Tenant Portal"
       pageDescription={`Welcome back, ${user?.name?.split(' ')[0] || 'User'}`}

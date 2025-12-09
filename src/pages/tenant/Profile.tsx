@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
-  Home, CreditCard, Wrench, FileText, Settings, Search, User, Mail, Phone,
-  MapPin, Briefcase, UserPlus, FileUser, Save, X as XIcon
+  User, Mail, Phone, MapPin, Briefcase, UserPlus, FileUser, Save, X as XIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,16 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import type { Tenant, TenantProfile } from "@/types";
 import { ProfileCompletionBanner } from "@/components/profile/ProfileCompletionBanner";
-
-const navLinks = [
-  { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
-  { icon: Search, label: "Search Properties", href: "/tenant/search" },
-  { icon: CreditCard, label: "Rent Payment", href: "/tenant/rent" },
-  { icon: Wrench, label: "Maintenance", href: "/tenant/maintenance" },
-  { icon: FileText, label: "Agreements", href: "/tenant/agreements" },
-  { icon: User, label: "Profile", href: "/tenant/profile" },
-  { icon: Settings, label: "Settings", href: "/settings" },
-];
+import { tenantNavLinks } from "@/config/navigation";
 
 const TenantProfile = () => {
   const { user, updateUser, getProfileCompleteness } = useAuth();
@@ -104,7 +94,7 @@ const TenantProfile = () => {
 
   return (
     <DashboardLayout
-      navLinks={navLinks}
+      navLinks={tenantNavLinks}
       userName={user?.name || "User"}
       pageTitle="Profile"
       pageDescription="Complete your profile to access all features"

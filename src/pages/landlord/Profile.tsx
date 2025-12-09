@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
-  Building2, Home, Users, CreditCard, Wrench, FileText, Settings,
   User, Mail, Phone, MapPin, Briefcase, DollarSign, FileCheck, Save, X as XIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,16 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import type { Landlord, LandlordProfile } from "@/types";
 import { ProfileCompletionBanner } from "@/components/profile/ProfileCompletionBanner";
-
-const navLinks = [
-  { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
-  { icon: Building2, label: "Properties", href: "/landlord/properties" },
-  { icon: Users, label: "Units", href: "/landlord/units" },
-  { icon: CreditCard, label: "Rent Collection", href: "/landlord/rent-collection" },
-  { icon: Wrench, label: "Maintenance", href: "/landlord/maintenance" },
-  { icon: FileText, label: "Agreements", href: "/landlord/agreements" },
-  { icon: Settings, label: "Settings", href: "/settings" },
-];
+import { landlordNavLinks } from "@/config/navigation";
 
 const LandlordProfile = () => {
   const { user, updateUser, getProfileCompleteness } = useAuth();
@@ -112,7 +102,7 @@ const LandlordProfile = () => {
 
   return (
     <DashboardLayout
-      navLinks={navLinks}
+      navLinks={landlordNavLinks}
       userName={user?.name || "User"}
       pageTitle="Profile"
       pageDescription="Complete your profile to manage properties and collect rent"
