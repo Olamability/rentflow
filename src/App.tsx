@@ -44,6 +44,7 @@ import SubscriptionManagement from "./pages/admin/SubscriptionManagement";
 import SystemConfiguration from "./pages/admin/SystemConfiguration";
 import AuditLog from "./pages/admin/AuditLog";
 import PlatformAnnouncements from "./pages/admin/PlatformAnnouncements";
+import AdminProfile from "./pages/admin/Profile";
 
 // Shared Pages
 import Settings from "./pages/shared/Settings";
@@ -125,6 +126,7 @@ const App = () => (
           <Route path="/admin/configuration" element={<ProtectedRoute allowedRoles={['admin']}><SystemConfiguration /></ProtectedRoute>} />
           <Route path="/admin/audit-log" element={<ProtectedRoute allowedRoles={['admin']}><AuditLog /></ProtectedRoute>} />
           <Route path="/admin/announcements" element={<ProtectedRoute allowedRoles={['admin']}><PlatformAnnouncements /></ProtectedRoute>} />
+          <Route path="/admin/profile" element={<ProtectedRoute allowedRoles={['admin']}><AdminProfile /></ProtectedRoute>} />
           
           {/* Shared Routes - Protected */}
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />

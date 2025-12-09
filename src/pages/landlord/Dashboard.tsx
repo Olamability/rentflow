@@ -7,7 +7,8 @@ import {
   DollarSign,
   Calendar,
   MoreVertical,
-  ChevronRight
+  ChevronRight,
+  CreditCard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
