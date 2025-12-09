@@ -1,15 +1,28 @@
 import { ReactNode, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   Building2, 
   Bell,
   Menu,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  LogOut,
+  User as UserIcon,
+  Settings as SettingsIcon,
+  ArrowLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 interface NavLink {
   icon: any;
@@ -24,6 +37,8 @@ interface DashboardLayoutProps {
   pageTitle?: string;
   pageDescription?: string;
   headerActions?: ReactNode;
+  showBackButton?: boolean;
+  backButtonPath?: string;
 }
 
 const DashboardLayout = ({
@@ -33,13 +48,21 @@ const DashboardLayout = ({
   pageTitle = "Dashboard",
   pageDescription,
   headerActions,
+  showBackButton = false,
+  backButtonPath,
 }: DashboardLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActiveLink = (href: string) => {
     return location.pathname === href || location.pathname.startsWith(href + '/');
+  };
+
+  const handleLogout = () => {
+    toast.success("Logged out successfully");
+    navigate("/login");
   };
 
   return (
@@ -129,6 +152,19 @@ const DashboardLayout = ({
               <Menu className="w-5 h-5" />
             </button>
             
+            {/* Back button */}
+            {showBackButton && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => backButtonPath ? navigate(backButtonPath) : navigate(-1)}
+                className="gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span className="hidden sm:inline">Back</span>
+              </Button>
+            )}
+            
             <div>
               <h1 className="text-xl font-semibold text-foreground">{pageTitle}</h1>
               {pageDescription && (
@@ -146,11 +182,41 @@ const DashboardLayout = ({
               <Bell className="w-5 h-5" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
             </Link>
-            <Link to="/settings" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-              <span className="text-sm font-semibold text-accent-foreground">
-                {userName.split(' ').map(n => n[0]).join('')}
-              </span>
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="w-10 h-10 rounded-full bg-accent flex items-center justify-center hover:opacity-80 transition-opacity">
+                  <span className="text-sm font-semibold text-accent-foreground">
+                    {userName.split(' ').map(n => n[0]).join('')}
+                  </span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium">{userName}</p>
+                    <p className="text-xs text-muted-foreground">Manage your account</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/settings" className="cursor-pointer">
+                    <SettingsIcon className="w-4 h-4 mr-2" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/tenant/profile" className="cursor-pointer">
+                    <UserIcon className="w-4 h-4 mr-2" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 
