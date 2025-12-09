@@ -17,19 +17,33 @@ import {
 // Base API configuration
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
+// Token management helper
+const getAuthToken = (): string | null => {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    return localStorage.getItem('adminToken');
+  }
+  return null;
+};
+
 // Generic API request handler
 async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<{ success: boolean; data?: T; error?: string }> {
   try {
+    const token = getAuthToken();
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
-        ...options.headers,
-      },
+      headers,
     });
 
     const data = await response.json();

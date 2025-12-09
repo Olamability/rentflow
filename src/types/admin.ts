@@ -76,7 +76,9 @@ export interface ActivityLog {
   description: string;
   timestamp: string;
   userId?: string;
-  metadata?: Record<string, any>;
+  metadata?: {
+    [key: string]: string | number | boolean;
+  };
 }
 
 export interface SystemConfig {
@@ -96,7 +98,12 @@ export interface AuditLog {
   action: string;
   resource: string;
   resourceId?: string;
-  changes?: Record<string, any>;
+  changes?: {
+    [key: string]: {
+      from?: string | number | boolean;
+      to?: string | number | boolean;
+    } | string | number | boolean;
+  };
   timestamp: string;
   ipAddress?: string;
 }

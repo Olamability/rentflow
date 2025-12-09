@@ -188,10 +188,7 @@ export const TicketDetailDialog = ({
               />
               <div className="flex gap-2 mt-2">
                 <Button onClick={handleSendMessage}>Send Message</Button>
-                <Button variant="outline" onClick={() => {
-                  onSendMessage?.(ticket.id, message);
-                  setMessage("");
-                }}>
+                <Button variant="outline" onClick={() => handleSendMessage()}>
                   Send as Internal Note
                 </Button>
               </div>
