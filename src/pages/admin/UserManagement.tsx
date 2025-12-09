@@ -1,9 +1,12 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, Users, BarChart3, Headphones, CreditCard, Settings, Shield, CheckCircle2, XCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FraudFlagDialog } from "@/components/admin/FraudFlagDialog";
+import { toast } from "sonner";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/admin/dashboard" },
@@ -15,6 +18,9 @@ const navLinks = [
 ];
 
 const UserManagement = () => {
+  const [isFlagDialogOpen, setIsFlagDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  
   const users = [
     { id: '1', name: 'James Wilson', email: 'james@rentflow.com', role: 'landlord', status: 'active', verified: true },
     { id: '2', name: 'Sarah Johnson', email: 'sarah@email.com', role: 'tenant', status: 'active', verified: true },
@@ -29,6 +35,15 @@ const UserManagement = () => {
       pageTitle="User Management"
       pageDescription="Manage platform users"
     >
+      {selectedUser && (
+        <FraudFlagDialog
+          open={isFlagDialogOpen}
+          onOpenChange={setIsFlagDialogOpen}
+          user={selectedUser}
+          onFlagUser={() => console.log("User flagged")}
+        />
+      )}
+      
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -71,8 +86,22 @@ const UserManagement = () => {
                   <td className="p-4">
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm">View</Button>
-                      {!user.verified && <Button size="sm">Approve</Button>}
-                      <Button variant="ghost" size="sm">
+                      {!user.verified && (
+                        <Button 
+                          size="sm"
+                          onClick={() => toast.success(`${user.name} has been approved`)}
+                        >
+                          Approve
+                        </Button>
+                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setIsFlagDialogOpen(true);
+                        }}
+                      >
                         <Shield className="w-4 h-4" />
                       </Button>
                     </div>

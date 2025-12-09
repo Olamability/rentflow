@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, Building2, Users, CreditCard, Wrench, FileText, Settings,
@@ -5,6 +6,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CreateReminderDialog } from "@/components/landlord/CreateReminderDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -20,6 +22,8 @@ const navLinks = [
 ];
 
 const AutomatedReminders = () => {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  
   const reminders = [
     { id: '1', type: 'Rent Due', schedule: '3 days before due date', channels: ['Email', 'SMS'], active: true },
     { id: '2', type: 'Rent Overdue', schedule: '1 day after due date', channels: ['Email', 'SMS', 'Push'], active: true },
@@ -34,12 +38,18 @@ const AutomatedReminders = () => {
       pageTitle="Automated Reminders"
       pageDescription="Configure automated notifications"
       headerActions={
-        <Button>
+        <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Create Reminder
         </Button>
       }
     >
+      <CreateReminderDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onReminderCreated={() => console.log("Reminder created")}
+      />
+      
       <div className="space-y-4">
         {reminders.map((reminder) => (
           <Card key={reminder.id} className="p-6">

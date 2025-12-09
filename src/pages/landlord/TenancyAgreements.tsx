@@ -1,9 +1,12 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, Building2, Users, CreditCard, Wrench, FileText, Settings,
   BarChart3, Crown, Bell as BellIcon, Download, FileSignature
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { GenerateAgreementDialog } from "@/components/landlord/GenerateAgreementDialog";
+import { toast } from "sonner";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -19,6 +22,8 @@ const navLinks = [
 ];
 
 const TenancyAgreements = () => {
+  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false);
+  
   const agreements = [
     { id: 'AGR-001', tenant: 'Sarah Johnson', unit: 'Unit 4A', startDate: '2024-01-15', endDate: '2025-01-14', status: 'active' },
     { id: 'AGR-002', tenant: 'John Smith', unit: 'Unit 2B', startDate: '2024-02-01', endDate: '2025-01-31', status: 'active' },
@@ -32,12 +37,18 @@ const TenancyAgreements = () => {
       pageTitle="Tenancy Agreements"
       pageDescription="Manage lease agreements and contracts"
       headerActions={
-        <Button>
+        <Button onClick={() => setIsGenerateDialogOpen(true)}>
           <FileSignature className="w-4 h-4 mr-2" />
           Generate Agreement
         </Button>
       }
     >
+      <GenerateAgreementDialog
+        open={isGenerateDialogOpen}
+        onOpenChange={setIsGenerateDialogOpen}
+        onAgreementGenerated={() => console.log("Agreement generated")}
+      />
+      
       <div className="bg-card rounded-xl border border-border">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -67,7 +78,11 @@ const TenancyAgreements = () => {
                   </td>
                   <td className="p-4">
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => toast.success("Agreement downloaded successfully!")}
+                      >
                         <Download className="w-4 h-4 mr-1" />
                         Download
                       </Button>

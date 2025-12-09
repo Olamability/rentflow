@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, CreditCard, Wrench, FileText, Settings, Search, User
@@ -5,6 +6,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { ApplicationDialog } from "@/components/tenant/ApplicationDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
@@ -17,6 +19,9 @@ const navLinks = [
 ];
 
 const PropertySearch = () => {
+  const [isApplicationDialogOpen, setIsApplicationDialogOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<{ id: string; name: string } | null>(null);
+  
   const properties = [
     {
       id: '1',
@@ -60,6 +65,15 @@ const PropertySearch = () => {
       pageTitle="Property Search"
       pageDescription="Find your perfect rental home"
     >
+      {selectedProperty && (
+        <ApplicationDialog
+          open={isApplicationDialogOpen}
+          onOpenChange={setIsApplicationDialogOpen}
+          propertyName={selectedProperty.name}
+          propertyId={selectedProperty.id}
+        />
+      )}
+      
       <div className="mb-6">
         <Input placeholder="Search by location, property type, or price..." className="max-w-2xl" />
       </div>
@@ -87,7 +101,12 @@ const PropertySearch = () => {
                   <div className="text-2xl font-bold text-foreground">${property.rent}</div>
                   <div className="text-xs text-muted-foreground">/month</div>
                 </div>
-                <Button>Apply Now</Button>
+                <Button onClick={() => {
+                  setSelectedProperty({ id: property.id, name: property.name });
+                  setIsApplicationDialogOpen(true);
+                }}>
+                  Apply Now
+                </Button>
               </div>
             </div>
           </Card>

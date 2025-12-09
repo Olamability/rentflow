@@ -1,9 +1,11 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, Users, BarChart3, Headphones, CreditCard, Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { TicketResponseDialog } from "@/components/admin/TicketResponseDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/admin/dashboard" },
@@ -15,6 +17,9 @@ const navLinks = [
 ];
 
 const SupportTickets = () => {
+  const [isResponseDialogOpen, setIsResponseDialogOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<any>(null);
+  
   const tickets = [
     { id: 'TKT-001', user: 'James Wilson', subject: 'Payment gateway issue', priority: 'high', status: 'open', date: '2024-12-08' },
     { id: 'TKT-002', user: 'Sarah Johnson', subject: 'Cannot upload documents', priority: 'medium', status: 'in_progress', date: '2024-12-07' },
@@ -28,6 +33,15 @@ const SupportTickets = () => {
       pageTitle="Support Tickets"
       pageDescription="Manage user support requests"
     >
+      {selectedTicket && (
+        <TicketResponseDialog
+          open={isResponseDialogOpen}
+          onOpenChange={setIsResponseDialogOpen}
+          ticket={selectedTicket}
+          onResponseSent={() => console.log("Response sent")}
+        />
+      )}
+      
       <div className="space-y-4">
         {tickets.map((ticket) => (
           <Card key={ticket.id} className="p-6">
@@ -55,7 +69,17 @@ const SupportTickets = () => {
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm">View</Button>
-                {ticket.status !== 'resolved' && <Button size="sm">Respond</Button>}
+                {ticket.status !== 'resolved' && (
+                  <Button 
+                    size="sm"
+                    onClick={() => {
+                      setSelectedTicket(ticket);
+                      setIsResponseDialogOpen(true);
+                    }}
+                  >
+                    Respond
+                  </Button>
+                )}
               </div>
             </div>
           </Card>
