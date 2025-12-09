@@ -1,65 +1,68 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
-  Home, CreditCard, Wrench, FileText, Settings, Search, User, Mail, Phone,
-  MapPin, Briefcase, UserPlus, FileUser, Save, X as XIcon
+  Building2, Home, Users, CreditCard, Wrench, FileText, Settings,
+  User, Mail, Phone, MapPin, Briefcase, DollarSign, FileCheck, Save, X as XIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import type { Tenant, TenantProfile } from "@/types";
+import type { Landlord, LandlordProfile } from "@/types";
 import { ProfileCompletionBanner } from "@/components/profile/ProfileCompletionBanner";
 
 const navLinks = [
-  { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
-  { icon: Search, label: "Search Properties", href: "/tenant/search" },
-  { icon: CreditCard, label: "Rent Payment", href: "/tenant/rent" },
-  { icon: Wrench, label: "Maintenance", href: "/tenant/maintenance" },
-  { icon: FileText, label: "Agreements", href: "/tenant/agreements" },
-  { icon: User, label: "Profile", href: "/tenant/profile" },
+  { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
+  { icon: Building2, label: "Properties", href: "/landlord/properties" },
+  { icon: Users, label: "Units", href: "/landlord/units" },
+  { icon: CreditCard, label: "Rent Collection", href: "/landlord/rent-collection" },
+  { icon: Wrench, label: "Maintenance", href: "/landlord/maintenance" },
+  { icon: FileText, label: "Agreements", href: "/landlord/agreements" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
-const TenantProfile = () => {
+const LandlordProfile = () => {
   const { user, updateUser, getProfileCompleteness } = useAuth();
   const navigate = useNavigate();
-  const tenant = user as Tenant;
+  const landlord = user as Landlord;
 
-  const [formData, setFormData] = useState<TenantProfile>({
-    firstName: tenant?.profile?.firstName || "",
-    lastName: tenant?.profile?.lastName || "",
-    dateOfBirth: tenant?.profile?.dateOfBirth || "",
-    nationalId: tenant?.profile?.nationalId || "",
-    address: tenant?.profile?.address || {
+  const [formData, setFormData] = useState<LandlordProfile>({
+    firstName: landlord?.profile?.firstName || "",
+    lastName: landlord?.profile?.lastName || "",
+    dateOfBirth: landlord?.profile?.dateOfBirth || "",
+    nationalId: landlord?.profile?.nationalId || "",
+    address: landlord?.profile?.address || {
       street: "",
       city: "",
       state: "",
       zipCode: "",
       country: "",
     },
-    employment: tenant?.profile?.employment || {
-      status: "employed",
-      employer: "",
-      position: "",
-      monthlyIncome: 0,
-      yearsEmployed: 0,
+    businessInfo: landlord?.profile?.businessInfo || {
+      registeredBusiness: false,
+      businessName: "",
+      businessRegistrationNumber: "",
+      taxId: "",
     },
-    emergencyContact: tenant?.profile?.emergencyContact || {
-      name: "",
-      relationship: "",
-      phone: "",
-      email: "",
+    bankDetails: landlord?.profile?.bankDetails || {
+      bankName: "",
+      accountNumber: "",
+      accountName: "",
+      routingNumber: "",
     },
-    references: tenant?.profile?.references || [],
+    verificationDocuments: landlord?.profile?.verificationDocuments || {
+      idCardUrl: "",
+      proofOfOwnershipUrl: "",
+      businessRegistrationUrl: "",
+    },
   });
 
-  const [phone, setPhone] = useState(tenant?.phone || "");
-  const [email, setEmail] = useState(tenant?.email || "");
+  const [phone, setPhone] = useState(landlord?.phone || "");
+  const [email] = useState(landlord?.email || "");
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({
@@ -72,7 +75,7 @@ const TenantProfile = () => {
     setFormData((prev) => ({
       ...prev,
       [parent]: {
-        ...(prev[parent as keyof TenantProfile] as any),
+        ...(prev[parent as keyof LandlordProfile] as any),
         [field]: value,
       },
     }));
@@ -87,6 +90,11 @@ const TenantProfile = () => {
       return;
     }
 
+    if (formData.bankDetails && (!formData.bankDetails.bankName || !formData.bankDetails.accountNumber)) {
+      toast.error("Please complete your bank details to receive rent payments");
+      return;
+    }
+
     // Update user with new profile data
     updateUser({
       phone,
@@ -97,7 +105,7 @@ const TenantProfile = () => {
   };
 
   const handleCancel = () => {
-    navigate("/tenant/dashboard");
+    navigate("/landlord/dashboard");
   };
 
   const completeness = getProfileCompleteness();
@@ -107,13 +115,13 @@ const TenantProfile = () => {
       navLinks={navLinks}
       userName={user?.name || "User"}
       pageTitle="Profile"
-      pageDescription="Complete your profile to access all features"
+      pageDescription="Complete your profile to manage properties and collect rent"
     >
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Profile Completion Banner */}
         <ProfileCompletionBanner
           completeness={completeness}
-          profileUrl="/tenant/profile"
+          profileUrl="/landlord/profile"
         />
 
         {/* Personal Information */}
@@ -149,7 +157,6 @@ const TenantProfile = () => {
                 <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
                   type="email"
                   disabled
@@ -195,7 +202,7 @@ const TenantProfile = () => {
             <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
               <MapPin className="w-5 h-5 text-accent" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground">Current Address</h3>
+            <h3 className="text-lg font-semibold text-foreground">Address</h3>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
@@ -204,7 +211,7 @@ const TenantProfile = () => {
                 value={formData.address?.street || ""}
                 onChange={(e) => handleNestedChange("address", "street", e.target.value)}
                 className="mt-2"
-                placeholder="123 Main Street, Apt 4B"
+                placeholder="123 Main Street"
               />
             </div>
             <div>
@@ -246,120 +253,156 @@ const TenantProfile = () => {
           </div>
         </Card>
 
-        {/* Employment Information */}
+        {/* Business Information */}
         <Card className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
               <Briefcase className="w-5 h-5 text-accent" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground">Employment Information</h3>
+            <h3 className="text-lg font-semibold text-foreground">Business Information</h3>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label>Registered Business</Label>
+                <p className="text-sm text-muted-foreground">Do you operate as a registered business?</p>
+              </div>
+              <Switch
+                checked={formData.businessInfo?.registeredBusiness || false}
+                onCheckedChange={(checked) => handleNestedChange("businessInfo", "registeredBusiness", checked)}
+              />
+            </div>
+            
+            {formData.businessInfo?.registeredBusiness && (
+              <div className="grid md:grid-cols-2 gap-4 pt-4">
+                <div>
+                  <Label>Business Name</Label>
+                  <Input
+                    value={formData.businessInfo?.businessName || ""}
+                    onChange={(e) => handleNestedChange("businessInfo", "businessName", e.target.value)}
+                    className="mt-2"
+                    placeholder="ABC Property Management LLC"
+                  />
+                </div>
+                <div>
+                  <Label>Registration Number</Label>
+                  <Input
+                    value={formData.businessInfo?.businessRegistrationNumber || ""}
+                    onChange={(e) => handleNestedChange("businessInfo", "businessRegistrationNumber", e.target.value)}
+                    className="mt-2"
+                    placeholder="123456789"
+                  />
+                </div>
+                <div>
+                  <Label>Tax ID / EIN</Label>
+                  <Input
+                    value={formData.businessInfo?.taxId || ""}
+                    onChange={(e) => handleNestedChange("businessInfo", "taxId", e.target.value)}
+                    className="mt-2"
+                    placeholder="XX-XXXXXXX"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </Card>
+
+        {/* Bank Details */}
+        <Card className="p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+              <DollarSign className="w-5 h-5 text-accent" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-foreground">Bank Details</h3>
+              <p className="text-sm text-muted-foreground">Required to receive rent payments</p>
+            </div>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <Label>Employment Status</Label>
-              <Select
-                value={formData.employment?.status || "employed"}
-                onValueChange={(value: any) => handleNestedChange("employment", "status", value)}
-              >
-                <SelectTrigger className="mt-2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="employed">Employed</SelectItem>
-                  <SelectItem value="self-employed">Self-Employed</SelectItem>
-                  <SelectItem value="student">Student</SelectItem>
-                  <SelectItem value="unemployed">Unemployed</SelectItem>
-                  <SelectItem value="retired">Retired</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Employer</Label>
+              <Label>Bank Name *</Label>
               <Input
-                value={formData.employment?.employer || ""}
-                onChange={(e) => handleNestedChange("employment", "employer", e.target.value)}
+                value={formData.bankDetails?.bankName || ""}
+                onChange={(e) => handleNestedChange("bankDetails", "bankName", e.target.value)}
                 className="mt-2"
-                placeholder="Company Name"
+                placeholder="Chase Bank"
               />
             </div>
             <div>
-              <Label>Position</Label>
+              <Label>Account Name *</Label>
               <Input
-                value={formData.employment?.position || ""}
-                onChange={(e) => handleNestedChange("employment", "position", e.target.value)}
+                value={formData.bankDetails?.accountName || ""}
+                onChange={(e) => handleNestedChange("bankDetails", "accountName", e.target.value)}
                 className="mt-2"
-                placeholder="Software Engineer"
+                placeholder="John Doe"
               />
             </div>
             <div>
-              <Label>Monthly Income</Label>
+              <Label>Account Number *</Label>
               <Input
-                type="number"
-                value={formData.employment?.monthlyIncome || ""}
-                onChange={(e) => handleNestedChange("employment", "monthlyIncome", parseFloat(e.target.value))}
+                value={formData.bankDetails?.accountNumber || ""}
+                onChange={(e) => handleNestedChange("bankDetails", "accountNumber", e.target.value)}
                 className="mt-2"
-                placeholder="5000"
+                placeholder="XXXXXXXXXX"
+                type="password"
               />
             </div>
             <div>
-              <Label>Years Employed</Label>
+              <Label>Routing Number</Label>
               <Input
-                type="number"
-                value={formData.employment?.yearsEmployed || ""}
-                onChange={(e) => handleNestedChange("employment", "yearsEmployed", parseFloat(e.target.value))}
+                value={formData.bankDetails?.routingNumber || ""}
+                onChange={(e) => handleNestedChange("bankDetails", "routingNumber", e.target.value)}
                 className="mt-2"
-                placeholder="2"
+                placeholder="XXXXXXXXX"
               />
             </div>
           </div>
         </Card>
 
-        {/* Emergency Contact */}
+        {/* Verification Documents */}
         <Card className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-              <UserPlus className="w-5 h-5 text-accent" />
+              <FileCheck className="w-5 h-5 text-accent" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground">Emergency Contact</h3>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-foreground">Verification Documents</h3>
+              <p className="text-sm text-muted-foreground">Upload documents to verify your identity and property ownership</p>
+            </div>
           </div>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div>
-              <Label>Full Name</Label>
+              <Label>ID Card / Passport</Label>
               <Input
-                value={formData.emergencyContact?.name || ""}
-                onChange={(e) => handleNestedChange("emergencyContact", "name", e.target.value)}
+                type="file"
+                accept="image/*,.pdf"
                 className="mt-2"
-                placeholder="Jane Doe"
+                disabled
               />
+              <p className="text-xs text-muted-foreground mt-1">Upload functionality coming soon</p>
             </div>
             <div>
-              <Label>Relationship</Label>
+              <Label>Proof of Property Ownership</Label>
               <Input
-                value={formData.emergencyContact?.relationship || ""}
-                onChange={(e) => handleNestedChange("emergencyContact", "relationship", e.target.value)}
+                type="file"
+                accept="image/*,.pdf"
                 className="mt-2"
-                placeholder="Spouse, Parent, Sibling"
+                disabled
               />
+              <p className="text-xs text-muted-foreground mt-1">Upload functionality coming soon</p>
             </div>
-            <div>
-              <Label>Phone</Label>
-              <Input
-                value={formData.emergencyContact?.phone || ""}
-                onChange={(e) => handleNestedChange("emergencyContact", "phone", e.target.value)}
-                className="mt-2"
-                placeholder="+1 (555) 123-4567"
-              />
-            </div>
-            <div>
-              <Label>Email</Label>
-              <Input
-                type="email"
-                value={formData.emergencyContact?.email || ""}
-                onChange={(e) => handleNestedChange("emergencyContact", "email", e.target.value)}
-                className="mt-2"
-                placeholder="jane@example.com"
-              />
-            </div>
+            {formData.businessInfo?.registeredBusiness && (
+              <div>
+                <Label>Business Registration Certificate</Label>
+                <Input
+                  type="file"
+                  accept="image/*,.pdf"
+                  className="mt-2"
+                  disabled
+                />
+                <p className="text-xs text-muted-foreground mt-1">Upload functionality coming soon</p>
+              </div>
+            )}
           </div>
         </Card>
 
@@ -379,4 +422,4 @@ const TenantProfile = () => {
   );
 };
 
-export default TenantProfile;
+export default LandlordProfile;

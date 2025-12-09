@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NavLink {
   icon: any;
@@ -55,6 +56,7 @@ const DashboardLayout = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const isActiveLink = (href: string) => {
     return location.pathname === href || location.pathname.startsWith(href + '/');
@@ -63,6 +65,21 @@ const DashboardLayout = ({
   const handleLogout = () => {
     toast.success("Logged out successfully");
     navigate("/login");
+  };
+
+  // Determine profile URL based on user role
+  const getProfileUrl = () => {
+    if (!user) return "/settings";
+    switch (user.role) {
+      case 'tenant':
+        return '/tenant/profile';
+      case 'landlord':
+        return '/landlord/profile';
+      case 'admin':
+        return '/admin/profile';
+      default:
+        return '/settings';
+    }
   };
 
   return (
@@ -205,7 +222,7 @@ const DashboardLayout = ({
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/tenant/profile" className="cursor-pointer">
+                  <Link to={getProfileUrl()} className="cursor-pointer">
                     <UserIcon className="w-4 h-4 mr-2" />
                     Profile
                   </Link>

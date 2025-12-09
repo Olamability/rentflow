@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { ProfileCompletionBanner } from "@/components/profile/ProfileCompletionBanner";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
@@ -47,13 +49,23 @@ const documents = [
 ];
 
 const TenantDashboard = () => {
+  const { user, getProfileCompleteness } = useAuth();
+  const completeness = getProfileCompleteness();
+
   return (
     <DashboardLayout
       navLinks={navLinks}
-      userName="Sarah Johnson"
+      userName={user?.name || "User"}
       pageTitle="Tenant Portal"
-      pageDescription="Welcome back, Sarah"
+      pageDescription={`Welcome back, ${user?.name?.split(' ')[0] || 'User'}`}
     >
+          {/* Profile Completion Banner */}
+          <ProfileCompletionBanner
+            completeness={completeness}
+            profileUrl="/tenant/profile"
+            className="mb-6"
+          />
+
           {/* Lease Overview Card */}
           <div className="bg-card rounded-xl border border-border p-6 mb-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">

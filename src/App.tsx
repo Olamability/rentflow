@@ -25,6 +25,7 @@ import TenancyAgreements from "./pages/landlord/TenancyAgreements";
 import LandlordReports from "./pages/landlord/Reports";
 import Subscription from "./pages/landlord/Subscription";
 import AutomatedReminders from "./pages/landlord/AutomatedReminders";
+import LandlordProfile from "./pages/landlord/Profile";
 
 // Tenant Pages
 import TenantDashboard from "./pages/tenant/Dashboard";
@@ -105,6 +106,7 @@ const App = () => (
           <Route path="/landlord/reports" element={<ProtectedRoute allowedRoles={['landlord']}><LandlordReports /></ProtectedRoute>} />
           <Route path="/landlord/subscription" element={<ProtectedRoute allowedRoles={['landlord']}><Subscription /></ProtectedRoute>} />
           <Route path="/landlord/reminders" element={<ProtectedRoute allowedRoles={['landlord']}><AutomatedReminders /></ProtectedRoute>} />
+          <Route path="/landlord/profile" element={<ProtectedRoute allowedRoles={['landlord']}><LandlordProfile /></ProtectedRoute>} />
           
           {/* Tenant Routes - Protected */}
           <Route path="/tenant/dashboard" element={<ProtectedRoute allowedRoles={['tenant']}><TenantDashboard /></ProtectedRoute>} />

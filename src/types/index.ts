@@ -10,6 +10,96 @@ export interface User {
   avatar?: string;
   createdAt: Date;
   isVerified: boolean;
+  profileComplete?: boolean;
+  profileCompleteness?: number; // 0-100 percentage
+}
+
+export interface TenantProfile {
+  // Personal Information
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: string;
+  nationalId?: string;
+  address?: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  
+  // Employment Information
+  employment?: {
+    status: 'employed' | 'self-employed' | 'unemployed' | 'student' | 'retired';
+    employer?: string;
+    position?: string;
+    monthlyIncome?: number;
+    yearsEmployed?: number;
+  };
+  
+  // Emergency Contact
+  emergencyContact?: {
+    name: string;
+    relationship: string;
+    phone: string;
+    email?: string;
+  };
+  
+  // References
+  references?: {
+    name: string;
+    relationship: string;
+    phone: string;
+    email?: string;
+  }[];
+  
+  // Previous Address
+  previousAddress?: {
+    street: string;
+    city: string;
+    state: string;
+    duration: string;
+    landlordName?: string;
+    landlordPhone?: string;
+  };
+}
+
+export interface LandlordProfile {
+  // Personal Information
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: string;
+  nationalId?: string;
+  address?: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  
+  // Business Information
+  businessInfo?: {
+    registeredBusiness: boolean;
+    businessName?: string;
+    businessRegistrationNumber?: string;
+    taxId?: string;
+  };
+  
+  // Bank Details
+  bankDetails?: {
+    bankName: string;
+    accountNumber: string;
+    accountName: string;
+    routingNumber?: string;
+  };
+  
+  // Verification Documents
+  verificationDocuments?: {
+    idCardUrl?: string;
+    proofOfOwnershipUrl?: string;
+    businessRegistrationUrl?: string;
+  };
 }
 
 export interface Landlord extends User {
@@ -18,12 +108,14 @@ export interface Landlord extends User {
   subscriptionStatus: 'free' | 'pro';
   subscriptionExpiry?: Date;
   properties: string[]; // Property IDs
+  profile?: LandlordProfile;
 }
 
 export interface Tenant extends User {
   role: 'tenant';
   currentLeaseId?: string;
   applicationStatus?: 'pending' | 'approved' | 'rejected';
+  profile?: TenantProfile;
 }
 
 export interface Admin extends User {

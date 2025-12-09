@@ -25,6 +25,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/contexts/AuthContext";
+import { ProfileCompletionBanner } from "@/components/profile/ProfileCompletionBanner";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -58,14 +60,16 @@ const properties = [
 
 const LandlordDashboard = () => {
   const navigate = useNavigate();
+  const { user, getProfileCompleteness } = useAuth();
   const [isAddPropertyDialogOpen, setIsAddPropertyDialogOpen] = useState(false);
+  const completeness = getProfileCompleteness();
 
   return (
     <DashboardLayout
       navLinks={navLinks}
-      userName="James Wilson"
+      userName={user?.name || "User"}
       pageTitle="Dashboard"
-      pageDescription="Welcome back, James"
+      pageDescription={`Welcome back, ${user?.name?.split(' ')[0] || 'User'}`}
       headerActions={
         <Button variant="accent" size="sm" onClick={() => setIsAddPropertyDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
@@ -81,6 +85,13 @@ const LandlordDashboard = () => {
         }}
       />
       
+          {/* Profile Completion Banner */}
+          <ProfileCompletionBanner
+            completeness={completeness}
+            profileUrl="/landlord/profile"
+            className="mb-6"
+          />
+
           {/* Stats grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {stats.map((stat) => (
