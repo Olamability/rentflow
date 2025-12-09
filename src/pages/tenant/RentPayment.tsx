@@ -1,9 +1,11 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, CreditCard, Wrench, FileText, Settings, Search, User, Calendar, CheckCircle2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { PaymentDialog } from "@/components/tenant/PaymentDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
@@ -16,6 +18,8 @@ const navLinks = [
 ];
 
 const RentPayment = () => {
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+  
   const currentRent = {
     amount: 1500,
     dueDate: '2024-12-15',
@@ -36,6 +40,14 @@ const RentPayment = () => {
       pageTitle="Rent Payment"
       pageDescription="Manage your rent payments"
     >
+      <PaymentDialog
+        open={isPaymentDialogOpen}
+        onOpenChange={setIsPaymentDialogOpen}
+        amount={currentRent.amount}
+        property={currentRent.property}
+        onPaymentSuccess={() => console.log("Payment successful")}
+      />
+      
       <div className="max-w-4xl mx-auto">
         {/* Current Rent Due */}
         <Card className="p-8 mb-6">
@@ -51,14 +63,14 @@ const RentPayment = () => {
           </div>
 
           <div className="flex gap-3">
-            <Button className="flex-1">
+            <Button className="flex-1" onClick={() => setIsPaymentDialogOpen(true)}>
               <CreditCard className="w-4 h-4 mr-2" />
               Pay with Card
             </Button>
-            <Button variant="outline" className="flex-1">
+            <Button variant="outline" className="flex-1" onClick={() => setIsPaymentDialogOpen(true)}>
               Pay with Transfer
             </Button>
-            <Button variant="outline">Setup Autopay</Button>
+            <Button variant="outline" onClick={() => setIsPaymentDialogOpen(true)}>Setup Autopay</Button>
           </div>
         </Card>
 

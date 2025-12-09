@@ -1,9 +1,11 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, Building2, Users, CreditCard, Wrench, FileText, Settings,
   BarChart3, Crown, Bell as BellIcon, CheckCircle2, Clock, AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ReceiptViewer } from "@/components/shared/ReceiptViewer";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -19,11 +21,14 @@ const navLinks = [
 ];
 
 const RentCollection = () => {
+  const [selectedReceipt, setSelectedReceipt] = useState<any>(null);
+  const [isReceiptViewerOpen, setIsReceiptViewerOpen] = useState(false);
+  
   const payments = [
-    { id: '1', tenant: 'Sarah Johnson', unit: 'Unit 4A', amount: 1500, due: '2024-12-01', status: 'paid', paidDate: '2024-12-05' },
-    { id: '2', tenant: 'John Smith', unit: 'Unit 2B', amount: 1200, due: '2024-12-01', status: 'paid', paidDate: '2024-12-05' },
-    { id: '3', tenant: 'Mike Davis', unit: 'Unit 7C', amount: 1800, due: '2024-12-01', status: 'pending' },
-    { id: '4', tenant: 'Emily Brown', unit: 'Unit 1A', amount: 1350, due: '2024-11-01', status: 'overdue' },
+    { id: '1', tenant: 'Sarah Johnson', unit: 'Unit 4A', property: 'Sunset Apartments', amount: 1500, due: '2024-12-01', status: 'paid', paidDate: '2024-12-05', paymentMethod: 'Card', transactionId: 'TXN-123456' },
+    { id: '2', tenant: 'John Smith', unit: 'Unit 2B', property: 'Sunset Apartments', amount: 1200, due: '2024-12-01', status: 'paid', paidDate: '2024-12-05', paymentMethod: 'Transfer', transactionId: 'TXN-123457' },
+    { id: '3', tenant: 'Mike Davis', unit: 'Unit 7C', property: 'Sunset Apartments', amount: 1800, due: '2024-12-01', status: 'pending' },
+    { id: '4', tenant: 'Emily Brown', unit: 'Unit 1A', property: 'Oak Street Condos', amount: 1350, due: '2024-11-01', status: 'overdue' },
   ];
 
   const stats = [
@@ -39,6 +44,14 @@ const RentCollection = () => {
       pageTitle="Rent Collection"
       pageDescription="Track and manage rent payments"
     >
+      {selectedReceipt && (
+        <ReceiptViewer
+          open={isReceiptViewerOpen}
+          onOpenChange={setIsReceiptViewerOpen}
+          receipt={selectedReceipt}
+        />
+      )}
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {stats.map((stat, idx) => (
           <div key={idx} className="bg-card rounded-xl border border-border p-6">
@@ -88,7 +101,25 @@ const RentCollection = () => {
                     </span>
                   </td>
                   <td className="p-4">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        if (payment.status === 'paid') {
+                          setSelectedReceipt({
+                            id: `REC-${payment.id}`,
+                            date: payment.paidDate || payment.due,
+                            tenant: payment.tenant,
+                            property: payment.property || 'Sunset Apartments',
+                            unit: payment.unit,
+                            amount: payment.amount,
+                            paymentMethod: payment.paymentMethod || 'Card',
+                            transactionId: payment.transactionId || 'N/A',
+                          });
+                          setIsReceiptViewerOpen(true);
+                        }
+                      }}
+                    >
                       {payment.status === 'paid' ? 'View Receipt' : 'Send Reminder'}
                     </Button>
                   </td>

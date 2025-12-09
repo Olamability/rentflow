@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, CreditCard, Wrench, FileText, Settings, Search, User, Plus, Upload
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { MaintenanceRequestDialog } from "@/components/tenant/MaintenanceRequestDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
@@ -18,6 +20,8 @@ const navLinks = [
 ];
 
 const Maintenance = () => {
+  const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
+  
   const requests = [
     { id: 'MR-001', title: 'Leaky faucet in bathroom', status: 'in_progress', priority: 'medium', date: '2024-12-03', lastUpdate: 'Technician assigned' },
     { id: 'MR-002', title: 'AC not cooling properly', status: 'completed', priority: 'high', date: '2024-11-15', lastUpdate: 'Repair completed' },
@@ -30,29 +34,28 @@ const Maintenance = () => {
       pageTitle="Maintenance Requests"
       pageDescription="Submit and track maintenance issues"
       headerActions={
-        <Button>
+        <Button onClick={() => setIsRequestDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           New Request
         </Button>
       }
     >
-      {/* New Request Form */}
+      <MaintenanceRequestDialog
+        open={isRequestDialogOpen}
+        onOpenChange={setIsRequestDialogOpen}
+        onRequestSubmitted={() => console.log("Request submitted")}
+      />
+      
+      {/* New Request Form - Keep for quick access */}
       <Card className="p-6 mb-6">
         <h3 className="text-lg font-semibold text-foreground mb-4">Submit New Request</h3>
-        <div className="space-y-4">
-          <div>
-            <Label>Issue Description</Label>
-            <Textarea placeholder="Describe the maintenance issue..." className="mt-2" />
-          </div>
-          <div>
-            <Label>Upload Photos/Videos</Label>
-            <div className="mt-2 border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-accent transition-colors cursor-pointer">
-              <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">Click to upload or drag and drop</p>
-            </div>
-          </div>
-          <Button className="w-full">Submit Request</Button>
-        </div>
+        <p className="text-sm text-muted-foreground mb-4">
+          Click "New Request" above to submit a detailed maintenance request with photos or videos.
+        </p>
+        <Button variant="outline" className="w-full" onClick={() => setIsRequestDialogOpen(true)}>
+          <Plus className="w-4 h-4 mr-2" />
+          Submit Maintenance Request
+        </Button>
       </Card>
 
       {/* Existing Requests */}

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, 
@@ -13,6 +14,7 @@ import {
   Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AddPropertyDialog } from "@/components/landlord/AddPropertyDialog";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -28,6 +30,8 @@ const navLinks = [
 ];
 
 const PropertyManagement = () => {
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  
   const properties = [
     {
       id: '1',
@@ -65,12 +69,21 @@ const PropertyManagement = () => {
       pageTitle="Property Management"
       pageDescription="Manage your properties and units"
       headerActions={
-        <Button>
+        <Button onClick={() => setIsAddDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Add Property
         </Button>
       }
     >
+      <AddPropertyDialog 
+        open={isAddDialogOpen} 
+        onOpenChange={setIsAddDialogOpen}
+        onPropertyAdded={() => {
+          // Handle refresh or update of property list
+          console.log("Property added");
+        }}
+      />
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {properties.map((property) => (
           <div key={property.id} className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow">
@@ -103,7 +116,10 @@ const PropertyManagement = () => {
         ))}
 
         {/* Add Property Card */}
-        <button className="bg-card rounded-xl border-2 border-dashed border-border hover:border-accent hover:bg-accent/5 transition-colors flex flex-col items-center justify-center p-12 min-h-[400px]">
+        <button 
+          onClick={() => setIsAddDialogOpen(true)}
+          className="bg-card rounded-xl border-2 border-dashed border-border hover:border-accent hover:bg-accent/5 transition-colors flex flex-col items-center justify-center p-12 min-h-[400px]"
+        >
           <Plus className="w-12 h-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-semibold text-foreground mb-1">Add New Property</h3>
           <p className="text-sm text-muted-foreground">Click to create a new property</p>
