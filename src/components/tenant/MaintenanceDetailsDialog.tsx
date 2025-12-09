@@ -79,9 +79,7 @@ export const MaintenanceDetailsDialog = ({ open, onOpenChange, request }: Mainte
           {/* Title */}
           <div>
             <h3 className="text-lg font-semibold text-foreground mb-2">{request.title}</h3>
-            {request.description && (
-              <p className="text-muted-foreground">{request.description || "No additional description provided."}</p>
-            )}
+            <p className="text-muted-foreground">{request.description || "No additional description provided."}</p>
           </div>
 
           <Separator />

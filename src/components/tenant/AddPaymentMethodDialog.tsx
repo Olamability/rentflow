@@ -33,6 +33,8 @@ export const AddPaymentMethodDialog = ({ open, onOpenChange, onPaymentMethodAdde
     
     toast.loading("Adding payment method...");
     
+    // TODO: Replace with actual API call
+    // This is a mock implementation for demonstration purposes
     setTimeout(() => {
       toast.dismiss();
       toast.success("Payment method added successfully!");
@@ -126,7 +128,7 @@ export const AddPaymentMethodDialog = ({ open, onOpenChange, onPaymentMethodAdde
                   <Label htmlFor="add-cvv">CVV</Label>
                   <Input
                     id="add-cvv"
-                    type="text"
+                    type="password"
                     pattern="[0-9]{3,4}"
                     value={cardDetails.cvv}
                     onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })}
