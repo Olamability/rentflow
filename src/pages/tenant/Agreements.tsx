@@ -4,6 +4,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/tenant/dashboard" },
@@ -75,11 +76,20 @@ const Agreements = () => {
         </div>
 
         <div className="flex gap-3 mt-8">
-          <Button className="flex-1">
+          <Button 
+            className="flex-1"
+            onClick={() => toast.success("Agreement downloaded successfully!")}
+          >
             <Download className="w-4 h-4 mr-2" />
             Download Agreement
           </Button>
-          <Button variant="outline" className="flex-1">View Full Document</Button>
+          <Button 
+            variant="outline" 
+            className="flex-1"
+            onClick={() => toast.info("Opening full document...")}
+          >
+            View Full Document
+          </Button>
         </div>
       </Card>
     </DashboardLayout>
