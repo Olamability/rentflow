@@ -1,9 +1,21 @@
+import { useState } from "react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { 
   Home, Building2, Users, CreditCard, Wrench, FileText, Settings,
   BarChart3, Crown, Bell as BellIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 const navLinks = [
   { icon: Home, label: "Dashboard", href: "/landlord/dashboard" },
@@ -19,6 +31,10 @@ const navLinks = [
 ];
 
 const Maintenance = () => {
+  const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isAssignWorkerOpen, setIsAssignWorkerOpen] = useState(false);
+  
   const requests = [
     { id: 'MR-001', tenant: 'Sarah Johnson', unit: 'Unit 4A', issue: 'Leaky faucet in bathroom', priority: 'medium', status: 'in_progress', date: '2024-12-03' },
     { id: 'MR-002', tenant: 'John Smith', unit: 'Unit 2B', issue: 'AC not cooling properly', priority: 'high', status: 'completed', date: '2024-11-15' },
@@ -32,6 +48,111 @@ const Maintenance = () => {
       pageTitle="Maintenance Requests"
       pageDescription="Track and manage maintenance requests"
     >
+      {/* View Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Maintenance Request Details</DialogTitle>
+            <DialogDescription>
+              View detailed information about this maintenance request
+            </DialogDescription>
+          </DialogHeader>
+          {selectedRequest && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Request ID</Label>
+                  <p className="text-foreground font-medium">{selectedRequest.id}</p>
+                </div>
+                <div>
+                  <Label>Submitted Date</Label>
+                  <p className="text-foreground font-medium">{selectedRequest.date}</p>
+                </div>
+                <div>
+                  <Label>Tenant</Label>
+                  <p className="text-foreground font-medium">{selectedRequest.tenant}</p>
+                </div>
+                <div>
+                  <Label>Unit</Label>
+                  <p className="text-foreground font-medium">{selectedRequest.unit}</p>
+                </div>
+                <div>
+                  <Label>Priority</Label>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    selectedRequest.priority === 'high' ? 'bg-destructive/10 text-destructive' :
+                    selectedRequest.priority === 'medium' ? 'bg-warning/10 text-warning' :
+                    'bg-secondary text-secondary-foreground'
+                  }`}>
+                    {selectedRequest.priority}
+                  </span>
+                </div>
+                <div>
+                  <Label>Status</Label>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    selectedRequest.status === 'completed' ? 'bg-success/10 text-success' :
+                    selectedRequest.status === 'in_progress' ? 'bg-info/10 text-info' :
+                    'bg-secondary text-secondary-foreground'
+                  }`}>
+                    {selectedRequest.status.replace('_', ' ')}
+                  </span>
+                </div>
+                <div className="col-span-2">
+                  <Label>Issue Description</Label>
+                  <p className="text-foreground font-medium">{selectedRequest.issue}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Assign Worker Dialog */}
+      <Dialog open={isAssignWorkerOpen} onOpenChange={setIsAssignWorkerOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Assign Worker</DialogTitle>
+            <DialogDescription>
+              Assign a maintenance worker to this request
+            </DialogDescription>
+          </DialogHeader>
+          {selectedRequest && (
+            <div className="space-y-4">
+              <div>
+                <Label>Request</Label>
+                <p className="text-foreground font-medium">{selectedRequest.issue}</p>
+              </div>
+              <div>
+                <Label htmlFor="worker-name">Worker Name</Label>
+                <Input id="worker-name" placeholder="Enter worker name" />
+              </div>
+              <div>
+                <Label htmlFor="worker-phone">Worker Phone</Label>
+                <Input id="worker-phone" placeholder="Enter phone number" />
+              </div>
+              <div>
+                <Label htmlFor="scheduled-date">Scheduled Date</Label>
+                <Input id="scheduled-date" type="date" />
+              </div>
+              <div>
+                <Label htmlFor="notes">Notes</Label>
+                <Textarea id="notes" placeholder="Add any additional notes..." />
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" onClick={() => setIsAssignWorkerOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={() => {
+                  toast.success("Worker assigned successfully");
+                  setIsAssignWorkerOpen(false);
+                }}>
+                  Assign Worker
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <div className="space-y-4">
         {requests.map((request) => (
           <div key={request.id} className="bg-card rounded-xl border border-border p-6">
@@ -59,8 +180,25 @@ const Maintenance = () => {
                 <p className="text-xs text-muted-foreground mt-2">Submitted: {request.date}</p>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">View Details</Button>
-                <Button size="sm">Assign Worker</Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setSelectedRequest(request);
+                    setIsDetailsOpen(true);
+                  }}
+                >
+                  View Details
+                </Button>
+                <Button 
+                  size="sm"
+                  onClick={() => {
+                    setSelectedRequest(request);
+                    setIsAssignWorkerOpen(true);
+                  }}
+                >
+                  Assign Worker
+                </Button>
               </div>
             </div>
           </div>
